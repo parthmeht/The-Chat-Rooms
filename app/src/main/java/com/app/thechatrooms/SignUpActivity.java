@@ -144,6 +144,8 @@ public class SignUpActivity extends AppCompatActivity {
         else if (selectedImageURI == null){
             Toast.makeText(this, "Upload a profile Image", Toast.LENGTH_LONG).show();
         }
+
+
         else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(checkedRadioButtonId);
