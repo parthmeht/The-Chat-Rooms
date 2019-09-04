@@ -4,15 +4,27 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.Messages;
 import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.ui.chats.ChatsFragment;
+import com.app.thechatrooms.ui.contacts.ContactsFragment;
+import com.app.thechatrooms.ui.groups.GroupsFragment;
+import com.app.thechatrooms.ui.profile.ProfileFragment;
 import com.app.thechatrooms.utilities.Parameters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -35,25 +47,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomeActivity";
-    private AppBarConfiguration mAppBarConfiguration;
+    //private AppBarConfiguration mAppBarConfiguration;
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
     private User user;
+    private DrawerLayout drawer;
     // Write a message to the database
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, groupChatDbRef;
     private String userId;
+    private String groupName;
     StorageReference storageReference;
     ImageView userProfileImageView;
     TextView displayNameTextView;
@@ -64,22 +85,20 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         // Initialize Firebase Auth
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mAuth = FirebaseAuth.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         database = FirebaseDatabase.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = preferences.getString(Parameters.USER_ID, "");
+        groupChatDbRef = database.getReference("chatRooms/groupChatRoom/");
         if(!userId.equalsIgnoreCase("")) {
             myRef = database.getReference("chatRooms/userProfiles/"+userId);
             storageReference = mStorageRef.child("chatRooms/userProfiles/"+userId+".jpg");
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        });
         TextView logOut = findViewById(R.id.logout);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,18 +107,13 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_chats, R.id.nav_profile, R.id.nav_contacts,
-                R.id.nav_groups)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         View hView =  navigationView.getHeaderView(0);
         displayNameTextView = hView.findViewById(R.id.displayNameTextView);
@@ -146,16 +160,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.nav_chats:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChatsFragment()).commit();
+                toolbar.setTitle(R.string.menu_chats);
+                break;
+            case R.id.nav_contacts:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ContactsFragment()).commit();
+                toolbar.setTitle(R.string.menu_contacts);
+                break;
+            case R.id.nav_profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).commit();
+                toolbar.setTitle(R.string.menu_profile);
+                break;
+            case R.id.nav_groups:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new GroupsFragment()).commit();
+                toolbar.setTitle(R.string.menu_groups);
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }

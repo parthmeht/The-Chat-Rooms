@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class GroupChatRoom {
     private String groupId;
     private String groupName;
-    private String groupIcon;
+    //private String groupIcon;
     private ArrayList<String> membersList = new ArrayList<>();
     private ArrayList<Messages> messageList = new ArrayList<>();
     private String createdBy, createdOn;
@@ -26,13 +26,13 @@ public class GroupChatRoom {
         this.groupName = groupName;
     }
 
-    public String getGroupIcon() {
+    /*public String getGroupIcon() {
         return groupIcon;
     }
 
     public void setGroupIcon(String groupIcon) {
         this.groupIcon = groupIcon;
-    }
+    }*/
 
     public ArrayList<String> getMembersList() {
         return membersList;
