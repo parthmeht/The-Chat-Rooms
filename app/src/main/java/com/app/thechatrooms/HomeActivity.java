@@ -1,5 +1,6 @@
 package com.app.thechatrooms;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import com.app.thechatrooms.models.Messages;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.app.thechatrooms.ui.contacts.ContactsFragment;
+import com.app.thechatrooms.ui.createGroup.CreateGroupFragment;
 import com.app.thechatrooms.ui.groups.GroupsFragment;
 import com.app.thechatrooms.ui.profile.ProfileFragment;
 import com.app.thechatrooms.utilities.Parameters;
@@ -18,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -186,6 +189,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_createGroup:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Parameters.USER_ID, user);
+                CreateGroupFragment fragment = new CreateGroupFragment();
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+                toolbar.setTitle(R.string.action_createGroup);
+                return true;
+        }
         return true;
     }
 
