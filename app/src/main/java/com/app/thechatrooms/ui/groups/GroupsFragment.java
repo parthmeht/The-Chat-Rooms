@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.thechatrooms.Adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.utilities.Parameters;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,12 +40,16 @@ public class GroupsFragment extends Fragment {
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
+    private FirebaseAuth mAuth;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         groupsViewModel =
                 ViewModelProviders.of(this).get(GroupsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_groups, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
@@ -57,7 +64,8 @@ public class GroupsFragment extends Fragment {
                     groupList.add(group);
                     RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    groupFragmentAdapter = new GroupFragmentAdapter(groupList, getActivity(),getContext());
+
+                    groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext());
                     recyclerView.setAdapter(groupFragmentAdapter);
                     groupFragmentAdapter.notifyDataSetChanged();
                 }
