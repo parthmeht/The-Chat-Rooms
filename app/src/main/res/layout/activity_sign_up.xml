@@ -151,7 +151,8 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@+id/signUp_cityEditText"
             app:layout_constraintStart_toStartOf="@+id/signUp_genderTextView"
-            app:layout_constraintTop_toBottomOf="@+id/signUp_genderTextView">
+            app:layout_constraintTop_toBottomOf="@+id/signUp_genderTextView"
+            android:checkedButton="@+id/signUp_maleRadioButton">
 
             <RadioButton
                 android:id="@+id/signUp_maleRadioButton"

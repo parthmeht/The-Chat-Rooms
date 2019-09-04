@@ -3,9 +3,15 @@ package com.app.thechatrooms;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.thechatrooms.utilities.Parameters;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        checkInternetPermissionGranted();
+        checkReadStoragePermissionGranted();
+        checkWriteStoragePermissionGranted();
 
         findViewById(R.id.main_signUpTextView).setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
@@ -46,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         forgotPasswordTextView.setOnClickListener(view -> {
             LayoutInflater layoutInflater = getLayoutInflater();
             final View v = layoutInflater.inflate(R.layout.alert_dialog, null);
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogTheme);
             alertDialog.setTitle("Enter Email Id :");
             final EditText input = v.findViewById(R.id.etComments);
             alertDialog.setPositiveButton("YES",
@@ -59,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, "Email sent.");
                                         Toast.makeText(view.getContext(),"Email Sent Successfully to "+email,Toast.LENGTH_LONG).show();
                                     }else {
-                                        Toast.makeText(view.getContext(),"Unable to Send Email",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(view.getContext(), Parameters.UNABLE_SEND,Toast.LENGTH_LONG).show();
                                     }
                                 });
 
@@ -105,10 +115,55 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateUI(FirebaseUser user){
         if (user!=null){
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Parameters.USER_ID,user.getUid());
+            editor.apply();
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
         }
     }
 
+    public void checkWriteStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+            } else {
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+        }
+    }
+
+    public void checkReadStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+            } else {
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+        }
+    }
+
+    public void checkInternetPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+            } else {
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+        }
+    }
 
 }
