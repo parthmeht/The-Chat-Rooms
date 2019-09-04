@@ -2,6 +2,7 @@ package com.app.thechatrooms;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -140,6 +141,9 @@ public class SignUpActivity extends AppCompatActivity {
             confirmPasswordEditText.setError(Parameters.INCORRECT_CONFIRM_PASSWORD);
         else if (Parameters.EMPTY.equalsIgnoreCase(cityEditText.getText().toString()))
             cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
+        else if (selectedImageURI == null){
+            Toast.makeText(this, "Upload a profile Image", Toast.LENGTH_LONG).show();
+        }
         else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(checkedRadioButtonId);
