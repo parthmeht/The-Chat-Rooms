@@ -2,7 +2,9 @@ package com.app.thechatrooms.models;
 
 import android.net.Uri;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String id;
     private Uri userProfileImage;
     private String firstName;

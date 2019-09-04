@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -163,6 +164,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_chats:
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChatsFragment()).commit();
                 toolbar.setTitle(R.string.menu_chats);
                 break;
@@ -171,7 +173,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(R.string.menu_contacts);
                 break;
             case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Parameters.USER_ID, user);
+                ProfileFragment fragment = new ProfileFragment();
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
                 toolbar.setTitle(R.string.menu_profile);
                 break;
             case R.id.nav_groups:
