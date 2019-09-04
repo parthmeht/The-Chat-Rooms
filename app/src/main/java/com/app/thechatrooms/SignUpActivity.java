@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -51,8 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Uri selectedImageURI;
     private User user;
     // Write a message to the database
-    FirebaseDatabase database;
-    DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,6 @@ public class SignUpActivity extends AppCompatActivity {
                             updateUI(null);
                         }
 
-                        // ...
                     });
         }
     }
@@ -182,6 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 Picasso.get()
                         .load(selectedImageURI)
+                        .transform(new CropCircleTransformation())
                         .fit()
                         .centerCrop()
                         .into(userProfileImageView);
@@ -202,7 +203,7 @@ public class SignUpActivity extends AppCompatActivity {
                     task.addOnSuccessListener(uri -> {
                         String photoLink = uri.toString();
                         Toast.makeText(getApplicationContext(),photoLink, Toast.LENGTH_LONG).show();
-                        user.setUserProfileImage(photoLink);
+                        user.setUserProfileImage(uri);
                     });
                 })
                 .addOnFailureListener(exception -> {

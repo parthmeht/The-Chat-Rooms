@@ -1,4 +1,4 @@
-package com.app.thechatrooms.ui.send;
+package com.app.thechatrooms.ui.chats;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,22 +14,22 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.app.thechatrooms.R;
 
-public class SendFragment extends Fragment {
+public class ChatsFragment extends Fragment {
 
-    private SendViewModel sendViewModel;
+    private ChatsViewModel chatsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        sendViewModel =
-                ViewModelProviders.of(this).get(SendViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_send, container, false);
-        final TextView textView = root.findViewById(R.id.text_send);
-        sendViewModel.getText().observe(this, new Observer<String>() {
+        chatsViewModel = ViewModelProviders.of(this).get(ChatsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_chats, container, false);
+        final TextView textView = root.findViewById(R.id.text_home);
+        chatsViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
+
         return root;
     }
 }

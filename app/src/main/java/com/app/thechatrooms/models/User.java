@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public class User {
     private String id;
-    private String userProfileImage;
+    private Uri userProfileImage;
     private String firstName;
     private String lastName;
     private String emailId;
@@ -21,6 +21,10 @@ public class User {
         this.gender = gender;
     }
 
+    public User(){
+
+    }
+
     public String getId() {
         return id;
     }
@@ -29,11 +33,11 @@ public class User {
         this.id = id;
     }
 
-    public String getUserProfileImage() {
+    public Uri getUserProfileImage() {
         return userProfileImage;
     }
 
-    public void setUserProfileImage(String userProfileImage) {
+    public void setUserProfileImage(Uri userProfileImage) {
         this.userProfileImage = userProfileImage;
     }
 
@@ -83,5 +87,18 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", emailId='" + emailId + '\'' +
+                ", password='" + password + '\'' +
+                ", city='" + city + '\'' +
+                ", gender='" + gender + '\'' +
+                '}';
     }
 }

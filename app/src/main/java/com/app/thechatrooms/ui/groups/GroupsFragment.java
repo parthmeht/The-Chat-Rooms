@@ -1,4 +1,4 @@
-package com.app.thechatrooms.ui.gallery;
+package com.app.thechatrooms.ui.groups;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.app.thechatrooms.R;
 
-public class GalleryFragment extends Fragment {
+public class GroupsFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private GroupsViewModel groupsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
+        groupsViewModel =
+                ViewModelProviders.of(this).get(GroupsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_groups, container, false);
+        final TextView textView = root.findViewById(R.id.text_tools);
+        groupsViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
