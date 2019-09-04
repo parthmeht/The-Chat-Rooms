@@ -1,11 +1,13 @@
 package com.app.thechatrooms.ui.contacts;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -23,14 +25,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ContactsFragment extends Fragment {
 
     private ContactsViewModel contactsViewModel;
-    StorageReference storageReference;
+    private StorageReference mStorageRef;
+
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<User> userList = new ArrayList<>();
@@ -43,6 +52,7 @@ public class ContactsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_contacts, container, false);
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/userProfiles");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -50,6 +60,24 @@ public class ContactsFragment extends Fragment {
                 for(DataSnapshot child :  dataSnapshot.getChildren()){
                     Log.d("CHILD", child.toString());
                     User user = child.getValue(User.class);
+                    File localFile = null;
+                    try {
+                        StorageReference storageReference;
+                        localFile = File.createTempFile(user.getId(), "jpg");
+                        File finalLocalFile = localFile;
+                        storageReference = mStorageRef.child("chatRooms/userProfiles/"+user.getId()+".jpg");
+                        storageReference.getFile(localFile)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    user.setUserProfileImage(Uri.fromFile(finalLocalFile));
+                                    Log.d("ERRRRRR","yay");
+                                }).addOnFailureListener(exception -> {
+                            Log.d("ERRRRRR","AWW");
+                            exception.printStackTrace();
+                        });
+                    } catch (IOException e) {
+//                        Toast.makeText(getParentFragment().getContext(),"NOT POSSIBLE",Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
                     userList.add(user);
                     RecyclerView recyclerView = root.findViewById(R.id.fragment_contacts_recyclerView);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

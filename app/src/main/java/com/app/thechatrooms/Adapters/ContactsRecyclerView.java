@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,8 +17,11 @@ import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.User;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerView.ViewHolder> {
     Context context;
@@ -49,6 +53,15 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
         holder.contactName.setText(user.getFirstName()+ " " +user.getLastName());
         Uri myUri = user.getUserProfileImage();
 
+        if (myUri == null)
+            Log.d("ERRRRRR","ERRRR");
+        Picasso.get()
+                .load(myUri)
+                .transform(new CropCircleTransformation())
+                .fit()
+                .centerCrop()
+                .into(holder.profileImage);
+
     }
 
     @Override
@@ -59,9 +72,11 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView contactName ;
+        ImageView profileImage;
         ViewHolder(View itemView){
             super(itemView);
             contactName = itemView.findViewById(R.id.fragment_contacts_item_userName);
+            profileImage = itemView.findViewById(R.id.fragment_contacts_item_userImage);
         }
 
     }
