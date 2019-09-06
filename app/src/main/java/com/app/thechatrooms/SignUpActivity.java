@@ -151,9 +151,8 @@ public class SignUpActivity extends AppCompatActivity {
             RadioButton radioButton = findViewById(checkedRadioButtonId);
 
             user = new User(firstNameEditText.getText().toString(), lastNameEditText.getText().toString(),
-                    emailIdEditText.getText().toString(), passwordEditText.getText().toString(),
-                    cityEditText.getText().toString(), radioButton.getText().toString());
-            mAuth.createUserWithEmailAndPassword(user.getEmailId(), user.getPassword())
+                    emailIdEditText.getText().toString(), cityEditText.getText().toString(), radioButton.getText().toString());
+            mAuth.createUserWithEmailAndPassword(user.getEmailId(), passwordEditText.getText().toString())
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information

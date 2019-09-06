@@ -10,77 +10,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-
-        <ImageView
-            android:id="@+id/main_LogoImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="116dp"
-            android:contentDescription="@string/logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/chat_bubble" />
-
-        <TextView
-            android:id="@+id/main_emailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="56dp"
-            android:layout_marginLeft="56dp"
-            android:layout_marginTop="60dp"
-            android:text="@string/emailID"
-            android:textColor="@android:color/background_light"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_LogoImageView" />
-
-        <EditText
-            android:id="@+id/main_emailEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="56dp"
-            android:layout_marginRight="56dp"
-            android:ems="10"
-            android:hint="@string/emailID"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            android:textColor="@android:color/background_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/main_emailTextView"
-            app:layout_constraintTop_toBottomOf="@+id/main_emailTextView" />
-
-        <TextView
-            android:id="@+id/main_passwordTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/password"
-            android:textColor="@android:color/background_light"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/main_emailEditText"
-            app:layout_constraintTop_toBottomOf="@+id/main_emailEditText" />
-
-        <EditText
-            android:id="@+id/main_passwordEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="56dp"
-            android:layout_marginRight="56dp"
-            android:ems="10"
-            android:hint="@string/password"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:textColor="@android:color/background_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/main_passwordTextView"
-            app:layout_constraintTop_toBottomOf="@+id/main_passwordTextView" />
 
         <Button
             android:id="@+id/main_loginButton"
@@ -94,6 +25,45 @@
             app:layout_constraintEnd_toEndOf="@+id/main_passwordEditText"
             app:layout_constraintStart_toStartOf="@+id/main_passwordEditText"
             app:layout_constraintTop_toBottomOf="@+id/main_passwordEditText" />
+
+        <EditText
+            android:id="@+id/main_passwordEditText"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:textColor="@android:color/background_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_emailEditText" />
+
+        <EditText
+            android:id="@+id/main_emailEditText"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
+            android:ems="10"
+            android:hint="@string/emailID"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:textColor="@android:color/background_light"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_LogoImageView" />
+
+        <ImageView
+            android:id="@+id/main_LogoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="116dp"
+            android:contentDescription="@string/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/chat_bubble" />
 
         <TextView
             android:id="@+id/main_forgotPasswordTextView"
@@ -111,10 +81,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="176dp"
-            android:layout_marginLeft="176dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="178dp"
-            android:layout_marginRight="178dp"
             android:text="@string/signUp"
             android:textColor="@android:color/background_light"
             android:textSize="18sp"

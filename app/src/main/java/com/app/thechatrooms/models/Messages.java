@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Messages {
     private String messageId;
     private String message;
-    private ArrayList<String> likesUserId = new ArrayList<>();
+    private ArrayList<Boolean> likesUserId = new ArrayList<>();
     private String createdBy;
     private String createdOn;
 
@@ -41,11 +41,11 @@ public class Messages {
         this.createdOn = createdOn;
     }
 
-    public ArrayList<String> getLikesUserId() {
+    public ArrayList<Boolean> getLikesUserId() {
         return likesUserId;
     }
 
-    public void setLikesUserId(ArrayList<String> likesUserId) {
+    public void setLikesUserId(ArrayList<Boolean> likesUserId) {
         this.likesUserId = likesUserId;
     }
 }

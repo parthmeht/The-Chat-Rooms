@@ -2,11 +2,13 @@ package com.app.thechatrooms;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.Messages;
+import com.app.thechatrooms.models.OnlineUser;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.app.thechatrooms.ui.contacts.ContactsFragment;
@@ -51,6 +53,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +75,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
+    //private User user;
     private User user;
     private DrawerLayout drawer;
     // Write a message to the database
@@ -100,6 +104,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(!userId.equalsIgnoreCase("")) {
             myRef = database.getReference("chatRooms/userProfiles/"+userId);
             storageReference = mStorageRef.child("chatRooms/userProfiles/"+userId+".jpg");
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    user = dataSnapshot.getValue(User.class);
+                    displayNameTextView.setText(user.getFirstName()+ " " + user.getLastName());
+                    displayEmailIdTextView.setText(user.getEmailId());
+                    Log.d(TAG, "Value is: " + user.toString());
+                    File localFile = null;
+                    try {
+                        localFile = File.createTempFile("images", "jpg");
+                        File finalLocalFile = localFile;
+                        storageReference.getFile(localFile)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    user.setUserProfileImage(Uri.fromFile(finalLocalFile));
+                                    Picasso.get()
+                                            .load(user.getUserProfileImage())
+                                            .transform(new CropCircleTransformation())
+                                            .fit()
+                                            .centerCrop()
+                                            .into(userProfileImageView);
+                                }).addOnFailureListener(exception -> {
+                            exception.printStackTrace();
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w(TAG, "Failed to read value.", error.toException());
+                }
+            });
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,51 +165,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
         userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                user = dataSnapshot.getValue(User.class);
-                displayNameTextView.setText(user.getFirstName()+ " " + user.getLastName());
-                displayEmailIdTextView.setText(user.getEmailId());
-                Log.d(TAG, "Value is: " + user.toString());
-                File localFile = null;
-                try {
-                    localFile = File.createTempFile("images", "jpg");
-                    File finalLocalFile = localFile;
-                    storageReference.getFile(localFile)
-                            .addOnSuccessListener(taskSnapshot -> {
-                                user.setUserProfileImage(Uri.fromFile(finalLocalFile));
-                                Picasso.get()
-                                        .load(user.getUserProfileImage())
-                                        .transform(new CropCircleTransformation())
-                                        .fit()
-                                        .centerCrop()
-                                        .into(userProfileImageView);
-                            }).addOnFailureListener(exception -> {
-                        exception.printStackTrace();
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_chats:
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ChatsFragment()).commit();
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable(Parameters.USER_ID, user);
+                ChatsFragment fragment1 = new ChatsFragment();
+                fragment1.setArguments(bundle1);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1).commit();
                 toolbar.setTitle(R.string.menu_chats);
                 break;
             case R.id.nav_contacts:
@@ -200,12 +208,42 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_createGroup:
-                Bundle bundle = new Bundle();
+                LayoutInflater layoutInflater = getLayoutInflater();
+                final View v = layoutInflater.inflate(R.layout.alert_dialog, null);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.CreateGroupDialogTheme);
+                alertDialog.setTitle("Enter Group Name :");
+                EditText input = v.findViewById(R.id.etComments);
+                input.setHint(R.string.group_name);
+                input.setTextColor(Color.WHITE);
+
+                alertDialog.setPositiveButton("Create",
+                        (dialog, which) -> {
+                            groupName = input.getText().toString();
+                            Log.e(TAG,"groupName = "+groupName);
+                            GroupChatRoom groupChatRoom = new GroupChatRoom();
+
+                            String grpId = groupChatDbRef.push().getKey();
+                            String createdOn = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
+                            groupChatRoom.setGroupId(grpId);
+                            groupChatRoom.setGroupName(groupName);
+                            groupChatRoom.setCreatedBy(user.getId());
+                            groupChatRoom.setCreatedOn(createdOn);
+                            groupChatDbRef.child(grpId).setValue(groupChatRoom);
+                            groupChatDbRef.child(grpId).child("membersListWithOnlineStatus").child(user.getId()).setValue(1);
+                            Toast.makeText(HomeActivity.this, "Group Created", Toast.LENGTH_LONG).show();
+
+                        });
+
+                alertDialog.setNegativeButton("Cancel",
+                        (dialog, which) -> dialog.cancel());
+                alertDialog.setView(v);
+                alertDialog.show();
+                /*Bundle bundle = new Bundle();
                 bundle.putSerializable(Parameters.USER_ID, user);
                 CreateGroupFragment fragment = new CreateGroupFragment();
                 fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
-                toolbar.setTitle(R.string.action_createGroup);
+                toolbar.setTitle(R.string.action_createGroup);*/
                 return true;
         }
         return true;

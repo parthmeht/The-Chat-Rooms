@@ -82,8 +82,8 @@ public class CreateGroupFragment extends Fragment {
                 groupChatRoom.setGroupName(name);
                 groupChatRoom.setCreatedBy(user.getId());
                 groupChatRoom.setCreatedOn(createdOn);
-                groupChatRoom.setMembersList(memberList);
-                groupChatRoom.setMessageList(msgList);
+                //groupChatRoom.setMembersList(memberList);
+                //groupChatRoom.setMessageList(msgList);
 
                 groupChatDbRef.child(id).setValue(groupChatRoom);
 

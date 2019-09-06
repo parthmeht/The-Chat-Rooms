@@ -10,15 +10,13 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private String emailId;
-    private String password;
     private String city;
     private String gender;
 
-    public User(String firstName, String lastName, String emailId, String password, String city, String gender) {
+    public User(String firstName, String lastName, String emailId, String city, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
-        this.password = password;
         this.city = city;
         this.gender = gender;
     }
@@ -67,14 +65,6 @@ public class User implements Serializable {
         this.emailId = emailId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getCity() {
         return city;
     }
@@ -98,7 +88,6 @@ public class User implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", emailId='" + emailId + '\'' +
-                ", password='" + password + '\'' +
                 ", city='" + city + '\'' +
                 ", gender='" + gender + '\'' +
                 '}';

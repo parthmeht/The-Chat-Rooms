@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.thechatrooms.utilities.Parameters;
+import com.app.thechatrooms.utilities.TestConnection;
+import com.app.thechatrooms.utilities.Utility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String email;
     private String password;
+    private Utility utility = new Utility();
     @BindView(R.id.main_emailEditText) EditText emailEditText;
     @BindView(R.id.main_passwordEditText) EditText passwordTextBox;
     @BindView(R.id.main_forgotPasswordTextView) TextView forgotPasswordTextView;
@@ -93,24 +97,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.main_loginButton) public void submit(View view){
+        utility.hideSoftKeyboard(this);
+        boolean isValid = true;
         email = emailEditText.getText().toString();
         password = passwordTextBox.getText().toString();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Log.d(TAG, "Display Name = " + user.getDisplayName() + "\n " +
-                                "Email Id = " + user.getEmail());
-                        updateUI(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        updateUI(null);
-                    }
-                });
+
+        if (email == null || email.equals("") || email.trim().equals("")) {
+            emailEditText.setError("Enter Email");
+            isValid = false;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Enter Valid Email ");
+            isValid = false;
+        } else if (password == null || password.equals("") || password.trim().equals("")) {
+            passwordTextBox.setError("Enter Password");
+            isValid = false;
+        }
+        if (TestConnection.isConnected(getSystemService(Context.CONNECTIVITY_SERVICE))) {
+            if (isValid) {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Log.d(TAG, "Display Name = " + user.getDisplayName() + "\n " +
+                                        "Email Id = " + user.getEmail());
+                                updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                updateUI(null);
+                            }
+                        });
+            }
+        }else {
+
+            Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void updateUI(FirebaseUser user){

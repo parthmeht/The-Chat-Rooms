@@ -5,9 +5,7 @@ import java.util.ArrayList;
 public class GroupChatRoom {
     private String groupId;
     private String groupName;
-    //private String groupIcon;
-    private ArrayList<String> membersList = new ArrayList<>();
-    private ArrayList<Messages> messageList = new ArrayList<>();
+    private ArrayList<OnlineUser> membersListWithOnlineStatus = new ArrayList<>();
     private String createdBy, createdOn;
 
     public String getGroupId() {
@@ -26,28 +24,12 @@ public class GroupChatRoom {
         this.groupName = groupName;
     }
 
-    /*public String getGroupIcon() {
-        return groupIcon;
+    public ArrayList<OnlineUser> getMembersList() {
+        return membersListWithOnlineStatus;
     }
 
-    public void setGroupIcon(String groupIcon) {
-        this.groupIcon = groupIcon;
-    }*/
-
-    public ArrayList<String> getMembersList() {
-        return membersList;
-    }
-
-    public void setMembersList(ArrayList<String> membersList) {
-        this.membersList = membersList;
-    }
-
-    public ArrayList<Messages> getMessageList() {
-        return messageList;
-    }
-
-    public void setMessageList(ArrayList<Messages> messageList) {
-        this.messageList = messageList;
+    public void setMembersList(ArrayList<OnlineUser> membersList) {
+        this.membersListWithOnlineStatus = membersList;
     }
 
     public String getCreatedBy() {
