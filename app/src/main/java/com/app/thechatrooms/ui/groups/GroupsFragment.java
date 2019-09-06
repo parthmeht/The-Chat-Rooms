@@ -15,7 +15,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.thechatrooms.Adapters.GroupFragmentAdapter;
+import com.app.thechatrooms.Adapters.*;
+
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.User;
