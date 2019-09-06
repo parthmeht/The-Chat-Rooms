@@ -1,4 +1,4 @@
-package com.app.thechatrooms.Adapters;
+package com.app.thechatrooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
-import com.app.thechatrooms.models.User;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
