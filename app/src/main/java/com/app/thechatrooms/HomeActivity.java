@@ -1,41 +1,36 @@
 package com.app.thechatrooms;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.app.thechatrooms.models.GroupChatRoom;
-import com.app.thechatrooms.models.Messages;
-import com.app.thechatrooms.models.OnlineUser;
-import com.app.thechatrooms.models.User;
-import com.app.thechatrooms.ui.chats.ChatsFragment;
-import com.app.thechatrooms.ui.contacts.ContactsFragment;
-import com.app.thechatrooms.ui.createGroup.CreateGroupFragment;
-import com.app.thechatrooms.ui.groups.GroupsFragment;
-import com.app.thechatrooms.ui.profile.ProfileFragment;
-import com.app.thechatrooms.utilities.Parameters;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.ui.chats.ChatsFragment;
+import com.app.thechatrooms.ui.contacts.ContactsFragment;
+import com.app.thechatrooms.ui.groups.GroupsFragment;
+import com.app.thechatrooms.ui.profile.ProfileFragment;
+import com.app.thechatrooms.utilities.Parameters;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,22 +42,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
