@@ -3,6 +3,7 @@ package com.app.thechatrooms;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -71,6 +72,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     TextView displayEmailIdTextView;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        userId = preferences.getString(Parameters.USER_ID, "");
+        myRef = database.getReference("chatRooms/userProfiles/");
+        myRef.child(userId).child("isOnline").setValue(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -93,6 +103,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     user = dataSnapshot.getValue(User.class);
+//                    new ChangeOnlineStatus().execute();
                     displayNameTextView.setText(user.getFirstName()+ " " + user.getLastName());
                     displayEmailIdTextView.setText(user.getEmailId());
                     Log.d(TAG, "Value is: " + user.toString());
@@ -147,6 +158,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
         userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
+
+    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        myRef = database.getReference("chatRooms/userProfiles/");
+//        myRef.child(userId).child("isOnline").setValue(false);
+//
+//    }
+
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Finale", "hey");
+        myRef = database.getReference("chatRooms/userProfiles/");
+        myRef.child(userId).child("isOnline").setValue(false);
 
     }
 
@@ -230,5 +260,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return true;
     }
+
+    private class ChangeOnlineStatus extends AsyncTask<String, String, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            myRef = database.getReference("chatRooms/userProfiles/");
+            myRef.child(userId).child("isOnline").setValue(true);
+            return null;
+
+        }
+    }
+//    private void ChangeOnlineStatus(){
+//
+//    }
 
 }

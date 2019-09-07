@@ -152,7 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             user = new User(firstNameEditText.getText().toString(), lastNameEditText.getText().toString(),
                     emailIdEditText.getText().toString(),
-                    cityEditText.getText().toString(), radioButton.getText().toString());
+                    cityEditText.getText().toString(), radioButton.getText().toString(), true);
             mAuth.createUserWithEmailAndPassword(user.getEmailId(), passwordEditText.getText().toString())
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {

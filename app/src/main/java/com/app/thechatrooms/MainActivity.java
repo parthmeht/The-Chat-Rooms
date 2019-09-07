@@ -22,6 +22,9 @@ import android.widget.Toast;
 import com.app.thechatrooms.utilities.Parameters;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +33,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private DatabaseReference myRef, groupChatDbRef;
     private FirebaseAuth mAuth;
     private String email;
     private String password;
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(view.getContext(), Parameters.UNABLE_SEND,Toast.LENGTH_LONG).show();
                                     }
                                 });
-
                     });
 
             alertDialog.setNegativeButton("NO",
@@ -115,12 +118,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateUI(FirebaseUser user){
         if (user!=null){
+
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(Parameters.USER_ID,user.getUid());
             editor.apply();
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
+//            FirebaseDatabase database = FirebaseDatabase.getInstance();
+//            myRef = database.getReference("chatRooms/userProfiles/");
+//            myRef.child(Parameters.USER_ID).child("isOnline").setValue(false);
+            finish();
+
+
         }
     }
 

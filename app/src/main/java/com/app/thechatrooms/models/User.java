@@ -13,17 +13,22 @@ public class User implements Serializable {
     private String city;
     private String gender;
 
-    public User(String firstName, String lastName, String emailId, String city, String gender) {
+    private Boolean isOnline;
+
+    public User(String firstName, String lastName, String emailId, String city, String gender, Boolean isOnLine) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.city = city;
         this.gender = gender;
+        this.isOnline = isOnLine;
     }
 
     public User(){
 
     }
+
+
 
     public String getId() {
         return id;
@@ -81,6 +86,13 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
+    public Boolean getIsOnline(){
+        return isOnline;
+    }
+
+    public void setIsOnline(Boolean isOnLine){
+        this.isOnline = isOnLine;
+    }
     @Override
     public String toString() {
         return "User{" +
