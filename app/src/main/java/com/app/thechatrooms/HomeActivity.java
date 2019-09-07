@@ -158,6 +158,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
         userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
+        if(savedInstanceState == null) {
+            Bundle bundle1 = new Bundle();
+            bundle1.putSerializable(Parameters.USER_ID, user);
+            ChatsFragment fragment1 = new ChatsFragment();
+            fragment1.setArguments(bundle1);
+            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1).commit();
+            toolbar.setTitle(R.string.menu_chats);
+            navigationView.setCheckedItem(R.id.nav_chats);
+        }
+
+
 
     }
 
@@ -170,6 +181,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //    }
 
 
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onStop() {
@@ -244,18 +263,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             groupChatDbRef.child(grpId).child("membersListWithOnlineStatus").child(user.getId()).setValue(1);
                             Toast.makeText(HomeActivity.this, "Group Created", Toast.LENGTH_LONG).show();
 
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(Parameters.USER_ID, user);
+                            ChatsFragment fragment = new ChatsFragment();
+                            fragment.setArguments(bundle);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+                            toolbar.setTitle(R.string.menu_chats);
+
                         });
 
                 alertDialog.setNegativeButton("Cancel",
                         (dialog, which) -> dialog.cancel());
                 alertDialog.setView(v);
                 alertDialog.show();
-                /*Bundle bundle = new Bundle();
-                bundle.putSerializable(Parameters.USER_ID, user);
-                CreateGroupFragment fragment = new CreateGroupFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
-                toolbar.setTitle(R.string.action_createGroup);*/
                 return true;
         }
         return true;

@@ -5,22 +5,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.thechatrooms.Adapters.*;
+import com.app.thechatrooms.adapters.*;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
-import com.app.thechatrooms.models.User;
-import com.app.thechatrooms.utilities.Parameters;
+import com.app.thechatrooms.models.OnlineUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,6 +57,34 @@ public class GroupsFragment extends Fragment {
                 groupList.clear();
                 for (DataSnapshot child: dataSnapshot.getChildren()){
                     Log.d("Child", child.toString());
+                    GroupChatRoom group = new GroupChatRoom();
+                    group.setCreatedBy(child.child("createdBy").getValue().toString());
+                    group.setCreatedOn(child.child("createdOn").getValue().toString());
+                    group.setGroupId(child.child("groupId").getValue().toString());
+                    group.setGroupName(child.child("groupName").getValue().toString());
+                    ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
+                    if(!group.getCreatedBy().equals(userId)){
+                        if(!child.child("membersListWithOnlineStatus").hasChild(userId)){
+                            for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
+                                Log.d("Child", group.getCreatedBy()+" , ********* "+child1.getKey());
+                                OnlineUser onlineUser = new OnlineUser();
+                                onlineUser.setUserId(child1.getKey());
+                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
+                                onlineUsersList.add(onlineUser);
+                                group.setMembersListWithOnlineStatus(onlineUsersList);
+                            }
+                            groupList.add(group);
+                        }
+                    }
+                }
+                RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext());
+                recyclerView.setAdapter(groupFragmentAdapter);
+                groupFragmentAdapter.notifyDataSetChanged();
+                /*for (DataSnapshot child: dataSnapshot.getChildren()){
+                    Log.d("Child", child.toString());
                     GroupChatRoom group = child.getValue(GroupChatRoom.class);
                     groupList.add(group);
                     RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
@@ -69,7 +93,7 @@ public class GroupsFragment extends Fragment {
                     groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext());
                     recyclerView.setAdapter(groupFragmentAdapter);
                     groupFragmentAdapter.notifyDataSetChanged();
-                }
+                }*/
             }
 
             @Override

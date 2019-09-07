@@ -24,11 +24,11 @@ public class GroupChatRoom {
         this.groupName = groupName;
     }
 
-    public ArrayList<OnlineUser> getMembersList() {
+    public ArrayList<OnlineUser> getMembersListWithOnlineStatus() {
         return membersListWithOnlineStatus;
     }
 
-    public void setMembersList(ArrayList<OnlineUser> membersList) {
+    public void setMembersListWithOnlineStatus(ArrayList<OnlineUser> membersList) {
         this.membersListWithOnlineStatus = membersList;
     }
 

@@ -1,6 +1,7 @@
 package com.app.thechatrooms.ui.chats;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,25 +12,96 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
+import com.app.thechatrooms.adapters.ChatFragmentAdapter;
+import com.app.thechatrooms.adapters.GroupFragmentAdapter;
+import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.OnlineUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
 
 public class ChatsFragment extends Fragment {
 
-    private ChatsViewModel chatsViewModel;
+    private View view;
+    private ChatFragmentAdapter chatFragmentAdapter;
+    private StorageReference mStorageRef;
+    private DatabaseReference myRef;
+    private FirebaseDatabase firebaseDatabase;
+    ArrayList<GroupChatRoom> groupList = new ArrayList<>();
+    private FirebaseAuth mAuth;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        chatsViewModel = ViewModelProviders.of(this).get(ChatsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_chats, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        chatsViewModel.getText().observe(this, new Observer<String>() {
+
+        view = inflater.inflate(R.layout.fragment_chats, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                groupList.clear();
+                for (DataSnapshot child: dataSnapshot.getChildren()){
+                    Log.d("Child", child.toString());
+                    GroupChatRoom group = new GroupChatRoom();
+                    group.setCreatedBy(child.child("createdBy").getValue().toString());
+                    group.setCreatedOn(child.child("createdOn").getValue().toString());
+                    group.setGroupId(child.child("groupId").getValue().toString());
+                    group.setGroupName(child.child("groupName").getValue().toString());
+                    ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
+                    if(group.getCreatedBy().equals(userId)){
+                        for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
+                            Log.d("Child", group.getCreatedBy()+" , ********* "+child1.getKey());
+                                OnlineUser onlineUser = new OnlineUser();
+                                onlineUser.setUserId(child1.getKey());
+                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
+                                onlineUsersList.add(onlineUser);
+                                group.setMembersListWithOnlineStatus(onlineUsersList);
+                        }
+                        groupList.add(group);
+                    }else{
+                        if(child.child("membersListWithOnlineStatus").hasChild(userId)){
+                            for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
+                                Log.d("Child", group.getCreatedBy()+" , ********* "+child1.getKey());
+                                OnlineUser onlineUser = new OnlineUser();
+                                onlineUser.setUserId(child1.getKey());
+                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
+                                onlineUsersList.add(onlineUser);
+                                group.setMembersListWithOnlineStatus(onlineUsersList);
+                            }
+                            groupList.add(group);
+                        }
+                    }
+                }
+                RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recycler_view);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                chatFragmentAdapter = new ChatFragmentAdapter(userId, groupList, getActivity(),getContext());
+                recyclerView.setAdapter(chatFragmentAdapter);
+                chatFragmentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
-        return root;
+        return view;
     }
 }

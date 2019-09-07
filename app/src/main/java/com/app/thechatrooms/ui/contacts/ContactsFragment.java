@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -17,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.thechatrooms.Adapters.ContactsRecyclerView;
+import com.app.thechatrooms.adapters.ContactsRecyclerView;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -27,13 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ContactsFragment extends Fragment {
 

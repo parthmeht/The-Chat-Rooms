@@ -1,4 +1,4 @@
-package com.app.thechatrooms.Adapters;
+package com.app.thechatrooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;
