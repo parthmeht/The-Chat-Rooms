@@ -38,7 +38,6 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
         ViewHolder viewHolder = new ViewHolder(view);
         storage = FirebaseStorage.getInstance();
         dbRef = FirebaseDatabase.getInstance();
-
         return viewHolder;
     }
 
