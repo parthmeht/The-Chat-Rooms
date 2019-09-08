@@ -25,7 +25,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.User;
@@ -49,7 +48,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ContactsFragment.OnContactsSelectedListener {
 
     private static final String TAG = "HomeActivity";
     //private AppBarConfiguration mAppBarConfiguration;
@@ -256,6 +255,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void updateProfileToolbar(String title) {
+        toolbar.setTitle(title);
+    }
+
     private class ChangeOnlineStatus extends AsyncTask<String, String, String>{
         @Override
         protected String doInBackground(String... strings) {
@@ -263,6 +267,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             myRef.child(userId).child("isOnline").setValue(true);
             return null;
 
+        }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof ContactsFragment) {
+            ContactsFragment contactsFragment = (ContactsFragment) fragment;
+            contactsFragment.setOnContactsSelectedListener(this);
         }
     }
 

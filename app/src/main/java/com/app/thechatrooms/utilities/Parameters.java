@@ -6,4 +6,5 @@ public final class Parameters {
     public static final String UNABLE_SEND = "Unable to Send Email";
     public static final CharSequence INCORRECT_CONFIRM_PASSWORD = "Incorrect Confirm Password!";
     public static final String USER_ID = "UserId";
+    public static final String PROFILE = "Profile";
 }

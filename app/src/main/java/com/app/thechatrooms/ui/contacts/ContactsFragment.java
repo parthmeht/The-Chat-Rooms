@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,6 +35,12 @@ public class ContactsFragment extends Fragment {
     private ArrayList<User> userList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ContactsRecyclerView contactsRecyclerView;
+
+    OnContactsSelectedListener callback;
+
+    public void setOnContactsSelectedListener(OnContactsSelectedListener callback) {
+        this.callback = callback;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class ContactsFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                callback.updateProfileToolbar(Parameters.PROFILE);
                 fragmentTransaction.commit();
             }
 
@@ -86,5 +92,9 @@ public class ContactsFragment extends Fragment {
         }));
 
         return root;
+    }
+
+    public interface OnContactsSelectedListener {
+        public void updateProfileToolbar(String title);
     }
 }

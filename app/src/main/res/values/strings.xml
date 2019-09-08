@@ -40,4 +40,5 @@
     <string name="add">add</string>
     <string name="delete">delete</string>
     <string name="remove">remove</string>
+    <string name="editProfile">Edit Profile</string>
 </resources>

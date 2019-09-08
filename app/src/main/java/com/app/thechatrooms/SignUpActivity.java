@@ -29,10 +29,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -126,6 +127,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.signUp_signUpButton) public void submit(View view){
+
+        File f = new File(selectedImageURI.getPath());
+        long size = f.length();
+
         if (Parameters.EMPTY.equalsIgnoreCase(firstNameEditText.getText().toString()))
             firstNameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (Parameters.EMPTY.equalsIgnoreCase(lastNameEditText.getText().toString()))
@@ -142,10 +147,9 @@ public class SignUpActivity extends AppCompatActivity {
             cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (selectedImageURI == null){
             Toast.makeText(this, "Upload a profile Image", Toast.LENGTH_LONG).show();
-        }
-
-
-        else {
+        }else if (size >= 5242880){
+            Toast.makeText(this, "Uploaded image should be less than 5 MB", Toast.LENGTH_LONG).show();
+        } else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(checkedRadioButtonId);
 
