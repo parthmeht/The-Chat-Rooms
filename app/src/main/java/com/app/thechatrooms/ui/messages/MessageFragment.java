@@ -1,6 +1,8 @@
 package com.app.thechatrooms.ui.messages;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -57,6 +60,7 @@ public class MessageFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                messagesArrayList.clear();
                 for (DataSnapshot val: dataSnapshot.getChildren()){
                     if(val.child("groupId").getValue() == groupdId){
                         Messages messages = val.getValue(Messages.class);
@@ -76,6 +80,7 @@ public class MessageFragment extends Fragment {
             }
         });
         sendButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 if (!editText.getText().toString().isEmpty()){
@@ -87,11 +92,17 @@ public class MessageFragment extends Fragment {
                     messages.setMessage(editText.getText().toString());
                     messages.setCreatedBy(userId);
                     myRef.child(messageId).setValue(messages);
+                    editText.setText("");
+                    hideKeyboard(getContext(), view);
                 }
             }
         });
         // Inflate the layout for this fragment
         return view;
+    }
+    public void hideKeyboard(Context context, View view){
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
