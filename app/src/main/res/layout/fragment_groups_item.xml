@@ -48,7 +48,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fragment_groups_item_texxtViewLinearLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_remove" />
+        app:srcCompat="@drawable/ic_remove"
+        android:background="@null" />
 
     <LinearLayout
         android:id="@+id/fragment_groups_item_texxtViewLinearLayout"
