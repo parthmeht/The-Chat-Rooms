@@ -3,7 +3,6 @@ package com.app.thechatrooms;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,6 +31,7 @@ import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.app.thechatrooms.ui.contacts.ContactsFragment;
 import com.app.thechatrooms.ui.groups.GroupsFragment;
 import com.app.thechatrooms.ui.profile.ProfileFragment;
+import com.app.thechatrooms.utilities.CircleTransform;
 import com.app.thechatrooms.utilities.Parameters;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,12 +44,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -104,29 +100,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     user = dataSnapshot.getValue(User.class);
-//                    new ChangeOnlineStatus().execute();
                     displayNameTextView.setText(user.getFirstName()+ " " + user.getLastName());
                     displayEmailIdTextView.setText(user.getEmailId());
                     Log.d(TAG, "Value is: " + user.toString());
-                    File localFile = null;
-                    try {
-                        localFile = File.createTempFile("images", "jpg");
-                        File finalLocalFile = localFile;
-                        storageReference.getFile(localFile)
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    user.setUserProfileImage(Uri.fromFile(finalLocalFile));
-                                    Picasso.get()
-                                            .load(user.getUserProfileImage())
-                                            .transform(new CropCircleTransformation())
-                                            .fit()
-                                            .centerCrop()
-                                            .into(userProfileImageView);
-                                }).addOnFailureListener(exception -> {
-                            exception.printStackTrace();
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Picasso.get()
+                            .load(user.getUserProfileImageUrl())
+                            .transform(new CircleTransform())
+                            .into(userProfileImageView);
                 }
 
                 @Override
@@ -139,14 +119,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView logOut = findViewById(R.id.logout);
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth.signOut();
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        logOut.setOnClickListener(view -> {
+            mAuth.signOut();
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -293,8 +270,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-//    private void ChangeOnlineStatus(){
-//
-//    }
 
 }

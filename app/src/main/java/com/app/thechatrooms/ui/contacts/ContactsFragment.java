@@ -1,6 +1,5 @@
 package com.app.thechatrooms.ui.contacts;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,16 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.thechatrooms.adapters.ContactsRecyclerView;
 import com.app.thechatrooms.R;
+import com.app.thechatrooms.adapters.ContactsRecyclerView;
 import com.app.thechatrooms.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ContactsFragment extends Fragment {
@@ -56,24 +53,6 @@ public class ContactsFragment extends Fragment {
                 for(DataSnapshot child :  dataSnapshot.getChildren()){
                     Log.d("CHILD", child.toString());
                     User user = child.getValue(User.class);
-                    File localFile = null;
-                    try {
-                        StorageReference storageReference;
-                        localFile = File.createTempFile(user.getId(), "jpg");
-                        File finalLocalFile = localFile;
-                        storageReference = mStorageRef.child("chatRooms/userProfiles/"+user.getId()+".jpg");
-                        storageReference.getFile(localFile)
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    user.setUserProfileImage(Uri.fromFile(finalLocalFile));
-                                    Log.d("ERRRRRR","yay");
-                                }).addOnFailureListener(exception -> {
-                            Log.d("ERRRRRR","AWW");
-                            exception.printStackTrace();
-                        });
-                    } catch (IOException e) {
-//                        Toast.makeText(getParentFragment().getContext(),"NOT POSSIBLE",Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
                     userList.add(user);
                     RecyclerView recyclerView = root.findViewById(R.id.fragment_contacts_recyclerView);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

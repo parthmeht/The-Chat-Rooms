@@ -10,15 +10,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
-        android:layout_marginLeft="125dp"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="125dp"
-        android:layout_marginRight="125dp"
+        android:contentDescription="@string/profileImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/profileImage" />
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/profile_displayNameTextView"

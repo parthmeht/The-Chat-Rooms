@@ -2,8 +2,6 @@ package com.app.thechatrooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.utilities.CircleTransform;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerView.ViewHolder> {
     Context context;
@@ -30,8 +27,6 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
     ArrayList<User> userList;
 
     public ContactsRecyclerView(ArrayList<User> userList, Activity a, Context context){
-        Log.d("test", userList.get(0).getCity());
-        Log.d("test", "*****************************8");
         this.userList = userList;
         this.context = context;
     }
@@ -51,15 +46,9 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final User user = userList.get(position);
         holder.contactName.setText(user.getFirstName()+ " " +user.getLastName());
-        Uri myUri = user.getUserProfileImage();
-
-        if (myUri == null)
-            Log.d("ERRRRRR","ERRRR");
         Picasso.get()
-                .load(myUri)
-                .transform(new CropCircleTransformation())
-                .fit()
-                .centerCrop()
+                .load(user.getUserProfileImageUrl())
+                .transform(new CircleTransform())
                 .into(holder.profileImage);
         if (!user.getIsOnline())
             holder.isOnline.setVisibility(View.GONE);

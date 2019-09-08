@@ -2,7 +2,6 @@ package com.app.thechatrooms;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.utilities.CircleTransform;
 import com.app.thechatrooms.utilities.Parameters;
 import com.app.thechatrooms.utilities.TextValidator;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Uri selectedImageURI;
     private User user;
-    // Write a message to the database
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
@@ -161,8 +160,6 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user1 = mAuth.getCurrentUser();
                             user.setId(user1.getUid());
                             uploadImage(user1.getUid());
-                            saveUserData();
-                            updateUI(user1);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -176,27 +173,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void saveUserData() {
         myRef.child(user.getId()).setValue(user);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-
-                selectedImageURI = data.getData();
-
-                Picasso.get()
-                        .load(selectedImageURI)
-                        .transform(new CropCircleTransformation())
-                        .fit()
-                        .centerCrop()
-                        .into(userProfileImageView);
-            }
-
-        }
-
-
+        updateUI(user.getId());
     }
 
     public void uploadImage(String id){
@@ -208,13 +185,28 @@ public class SignUpActivity extends AppCompatActivity {
                     Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                     task.addOnSuccessListener(uri -> {
                         String photoLink = uri.toString();
-                        Toast.makeText(getApplicationContext(),photoLink, Toast.LENGTH_LONG).show();
-                        user.setUserProfileImage(uri);
+                        //Toast.makeText(getApplicationContext(),photoLink, Toast.LENGTH_LONG).show();
+                        user.setUserProfileImageUrl(photoLink);
+                        saveUserData();
                     });
                 })
                 .addOnFailureListener(exception -> {
-                    Toast.makeText(getApplicationContext(),"Unable to upload profile image!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Unable to upload profile image! Try with a smaller image", Toast.LENGTH_LONG).show();
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                selectedImageURI = data.getData();
+                Picasso.get()
+                        .load(selectedImageURI)
+                        .transform(new CircleTransform())
+                        .into(userProfileImageView);
+            }
+        }
     }
 
 
@@ -224,14 +216,15 @@ public class SignUpActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        if (currentUser!=null)
+            updateUI(currentUser.getUid());
     }
 
-    private void updateUI(FirebaseUser currentUser) {
-        if (currentUser!=null){
+    private void updateUI(String userId) {
+        if (userId!=null){
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(Parameters.USER_ID,currentUser.getUid());
+            editor.putString(Parameters.USER_ID,userId);
             Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
             startActivity(intent);
         }

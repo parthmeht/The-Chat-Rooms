@@ -1,12 +1,10 @@
 package com.app.thechatrooms.models;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
     private String id;
-    private Uri userProfileImage;
+    private String userProfileImageUrl;
     private String firstName;
     private String lastName;
     private String emailId;
@@ -28,8 +26,6 @@ public class User implements Serializable {
 
     }
 
-
-
     public String getId() {
         return id;
     }
@@ -38,12 +34,20 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public Uri getUserProfileImage() {
-        return userProfileImage;
+    public String getUserProfileImageUrl() {
+        return userProfileImageUrl;
     }
 
-    public void setUserProfileImage(Uri userProfileImage) {
-        this.userProfileImage = userProfileImage;
+    public void setUserProfileImageUrl(String userProfileImageUrl) {
+        this.userProfileImageUrl = userProfileImageUrl;
+    }
+
+    public Boolean getOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(Boolean online) {
+        isOnline = online;
     }
 
     public String getFirstName() {
