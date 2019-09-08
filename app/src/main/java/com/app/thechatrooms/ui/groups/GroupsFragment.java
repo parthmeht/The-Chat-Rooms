@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,7 @@ import com.app.thechatrooms.adapters.*;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
+import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,12 +31,12 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class GroupsFragment extends Fragment {
+public class GroupsFragment extends Fragment implements GroupFragmentAdapter.GroupFragmentInterface {
 
     private GroupFragmentAdapter groupFragmentAdapter;
     private GroupsViewModel groupsViewModel;
     private StorageReference mStorageRef;
-
+    private String userId;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
@@ -46,7 +49,7 @@ public class GroupsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_groups, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        String userId = mAuth.getCurrentUser().getUid();
+        userId = mAuth.getCurrentUser().getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
@@ -80,7 +83,7 @@ public class GroupsFragment extends Fragment {
                 RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext());
+                groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext(), GroupsFragment.this);
                 recyclerView.setAdapter(groupFragmentAdapter);
                 groupFragmentAdapter.notifyDataSetChanged();
                 /*for (DataSnapshot child: dataSnapshot.getChildren()){
@@ -110,4 +113,17 @@ public class GroupsFragment extends Fragment {
 //        });
         return root;
     }
+
+    @Override
+    public void joinGroup(GroupChatRoom groupChatRoom) {
+        myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(1);
+        Fragment fragment = new ChatsFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
 }

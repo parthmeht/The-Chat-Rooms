@@ -63,6 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference myRef, groupChatDbRef;
     private String userId;
     private String groupName;
+    private NavigationView navigationView;
     StorageReference storageReference;
     ImageView userProfileImageView;
     TextView displayNameTextView;
@@ -129,7 +130,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -238,7 +239,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             fragment.setArguments(bundle);
                             getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
                             toolbar.setTitle(R.string.menu_chats);
-
+                            navigationView.setCheckedItem(R.id.nav_chats);
                         });
 
                 alertDialog.setNegativeButton("Cancel",

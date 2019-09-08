@@ -24,12 +24,13 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
     FirebaseDatabase dbRef;
     ArrayList<GroupChatRoom> groupList;
     String userId;
+    GroupFragmentInterface groupFragmentInterface;
 
-
-    public GroupFragmentAdapter(String user, ArrayList<GroupChatRoom> groupList, Activity a, Context context){
+    public GroupFragmentAdapter(String user, ArrayList<GroupChatRoom> groupList, Activity a, Context context, GroupFragmentInterface groupFragmentInterface){
         this.groupList = groupList;
         this.context = context;
         this.userId = user;
+        this.groupFragmentInterface = groupFragmentInterface;
     }
 
 
@@ -55,6 +56,12 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
         holder.groupName.setText(group.getGroupName());
         holder.createdBy.setText(group.getCreatedBy());
 
+        holder.joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                groupFragmentInterface.joinGroup(group);
+            }
+        });
     }
 
     @Override
@@ -76,5 +83,9 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
             deleteButton = itemView.findViewById(R.id.fragment_groups_item_deleteButton);
         }
 
+    }
+
+   public interface GroupFragmentInterface{
+        void joinGroup(GroupChatRoom groupChatRoom);
     }
 }

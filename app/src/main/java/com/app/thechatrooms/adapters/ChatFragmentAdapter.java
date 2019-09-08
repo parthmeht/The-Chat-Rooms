@@ -22,11 +22,13 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     Context context;
     String userId;
     ArrayList<GroupChatRoom> chatList;
+    ChatFragmentInterface chatFragmentInterface;
 
-    public ChatFragmentAdapter(String userId, ArrayList<GroupChatRoom> chatList, Activity a, Context context){
+    public ChatFragmentAdapter(String userId, ArrayList<GroupChatRoom> chatList, Activity a, Context context, ChatFragmentInterface chatFragmentInterface){
         this.chatList = chatList;
         this.context = context;
         this.userId = userId;
+        this.chatFragmentInterface = chatFragmentInterface;
     }
 
     @NonNull
@@ -58,6 +60,20 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         }
         holder.groupName.setText(group.getGroupName());
         holder.createdBy.setText(group.getCreatedBy());
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chatFragmentInterface.deleteGroup(group);
+            }
+        });
+
+        holder.leaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chatFragmentInterface.leaveGroup(group);
+            }
+        });
     }
 
     @Override
@@ -81,5 +97,10 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
             leaveButton = itemView.findViewById(R.id.fragment_groups_item_leaveButton);
         }
 
+    }
+
+    public interface ChatFragmentInterface{
+        void deleteGroup(GroupChatRoom groupChatRoom);
+        void leaveGroup(GroupChatRoom groupChatRoom);
     }
 }

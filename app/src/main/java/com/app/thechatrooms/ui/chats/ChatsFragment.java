@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +33,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class ChatsFragment extends Fragment {
+public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatFragmentInterface {
 
     private View view;
     private ChatFragmentAdapter chatFragmentAdapter;
@@ -40,6 +42,7 @@ public class ChatsFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
     private FirebaseAuth mAuth;
+    private String userId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class ChatsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_chats, container, false);
 
         mAuth = FirebaseAuth.getInstance();
-        String userId = mAuth.getCurrentUser().getUid();
+        userId = mAuth.getCurrentUser().getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
@@ -91,7 +94,7 @@ public class ChatsFragment extends Fragment {
                 RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                chatFragmentAdapter = new ChatFragmentAdapter(userId, groupList, getActivity(),getContext());
+                chatFragmentAdapter = new ChatFragmentAdapter(userId, groupList, getActivity(),getContext(), ChatsFragment.this);
                 recyclerView.setAdapter(chatFragmentAdapter);
                 chatFragmentAdapter.notifyDataSetChanged();
             }
@@ -103,5 +106,29 @@ public class ChatsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void deleteGroup(GroupChatRoom groupChatRoom) {
+        myRef.child(groupChatRoom.getGroupId()).setValue(null);
+        chatFragmentAdapter.notifyDataSetChanged();
+        /*Fragment fragment = new ChatsFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();*/
+    }
+
+    @Override
+    public void leaveGroup(GroupChatRoom groupChatRoom) {
+        myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(null);
+        chatFragmentAdapter.notifyDataSetChanged();
+        /*Fragment fragment = new ChatsFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();*/
     }
 }
