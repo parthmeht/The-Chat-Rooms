@@ -48,7 +48,7 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
         holder.contactName.setText(user.getFirstName()+ " " +user.getLastName());
         Picasso.get()
                 .load(user.getUserProfileImageUrl())
-                .transform(new CircleTransform())
+                .transform(new CircleTransform()).centerCrop().fit()
                 .into(holder.profileImage);
         if (!user.getIsOnline())
             holder.isOnline.setVisibility(View.GONE);

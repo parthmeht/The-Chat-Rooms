@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     Log.d(TAG, "Value is: " + user.toString());
                     Picasso.get()
                             .load(user.getUserProfileImageUrl())
-                            .transform(new CircleTransform())
+                            .transform(new CircleTransform()).centerCrop().fit()
                             .into(userProfileImageView);
                 }
 
@@ -148,18 +148,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_chats);
         }
 
-
-
     }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        myRef = database.getReference("chatRooms/userProfiles/");
-//        myRef.child(userId).child("isOnline").setValue(false);
-//
-//    }
-
 
     @Override
     public void onBackPressed() {

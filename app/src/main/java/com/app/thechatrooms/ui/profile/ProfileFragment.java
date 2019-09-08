@@ -41,7 +41,7 @@ public class ProfileFragment extends Fragment {
         profileViewModel.getUserMutableLiveData().observe(this, user -> {
             Picasso.get()
                     .load(user.getUserProfileImageUrl())
-                    .transform(new CircleTransform())
+                    .transform(new CircleTransform()).centerCrop().fit()
                     .into(profileImage);
             displayName.setText(user.getFirstName() + " " + user.getLastName());
             emailId.setText(user.getEmailId());

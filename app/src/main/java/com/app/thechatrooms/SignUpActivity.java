@@ -203,7 +203,7 @@ public class SignUpActivity extends AppCompatActivity {
                 selectedImageURI = data.getData();
                 Picasso.get()
                         .load(selectedImageURI)
-                        .transform(new CircleTransform())
+                        .transform(new CircleTransform()).centerCrop().fit()
                         .into(userProfileImageView);
             }
         }
