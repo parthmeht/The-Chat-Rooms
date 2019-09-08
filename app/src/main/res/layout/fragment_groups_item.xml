@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_groups_item_linerLayout"
     android:layout_width="match_parent"
     android:layout_height="75dp"
@@ -32,23 +31,29 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:contentDescription="@string/add"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add"
+        android:background="@null"/>
 
     <ImageButton
         android:id="@+id/fragment_groups_item_deleteButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:contentDescription="@string/delete"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_delete" />
+        app:srcCompat="@drawable/ic_delete"
+        android:background="@null"/>
 
     <ImageButton
         android:id="@+id/fragment_groups_item_leaveButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:contentDescription="@string/remove"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_remove" />
+        app:srcCompat="@drawable/ic_remove"
+        android:background="@null"/>
 
 </LinearLayout>
