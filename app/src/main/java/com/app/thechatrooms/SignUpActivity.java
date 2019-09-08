@@ -127,9 +127,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.signUp_signUpButton) public void submit(View view){
-
-        File f = new File(selectedImageURI.getPath());
-        long size = f.length();
+        long size = 0;
+        if(selectedImageURI!=null){
+            File f = new File(selectedImageURI.getPath());
+            size = f.length();
+        }
+        
 
         if (Parameters.EMPTY.equalsIgnoreCase(firstNameEditText.getText().toString()))
             firstNameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
