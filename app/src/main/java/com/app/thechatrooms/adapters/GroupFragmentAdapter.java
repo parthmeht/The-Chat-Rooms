@@ -54,7 +54,7 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
         holder.joinButton.setClickable(true);
 
         holder.groupName.setText(group.getGroupName());
-        holder.createdBy.setText(group.getCreatedBy());
+        holder.createdBy.setText(group.getCreatedByName());
 
         holder.joinButton.setOnClickListener(new View.OnClickListener() {
             @Override

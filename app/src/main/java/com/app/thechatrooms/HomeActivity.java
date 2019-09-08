@@ -227,9 +227,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             String createdOn = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
                             groupChatRoom.setGroupId(grpId);
                             groupChatRoom.setGroupName(groupName);
-                            groupChatRoom.setCreatedBy(user.getId());
+                            groupChatRoom.setCreatedByName(user.getFirstName()+" "+user.getLastName());
+                            groupChatRoom.setCreatedById(user.getId());
                             groupChatRoom.setCreatedOn(createdOn);
                             groupChatDbRef.child(grpId).setValue(groupChatRoom);
+                            //groupChatDbRef.child(grpId).child("createdBy").child(user.getId()).setValue(user.getFirstName()+" "+user.getLastName());
                             groupChatDbRef.child(grpId).child("membersListWithOnlineStatus").child(user.getId()).setValue(1);
                             Toast.makeText(HomeActivity.this, "Group Created", Toast.LENGTH_LONG).show();
 

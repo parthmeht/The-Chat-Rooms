@@ -6,7 +6,9 @@ public class GroupChatRoom {
     private String groupId;
     private String groupName;
     private ArrayList<OnlineUser> membersListWithOnlineStatus = new ArrayList<>();
-    private String createdBy, createdOn;
+    private String createdByName;
+    private String createdOn;
+    private String createdById;
 
     public String getGroupId() {
         return groupId;
@@ -32,12 +34,12 @@ public class GroupChatRoom {
         this.membersListWithOnlineStatus = membersList;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getCreatedByName() {
+        return createdByName;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
     }
 
     public String getCreatedOn() {
@@ -47,5 +49,13 @@ public class GroupChatRoom {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
+    public String getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(String createdById) {
+        this.createdById = createdById;
+    }
+
 
 }

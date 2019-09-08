@@ -22,6 +22,7 @@ import com.app.thechatrooms.adapters.ChatFragmentAdapter;
 import com.app.thechatrooms.adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,16 +61,16 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groupList.clear();
                 for (DataSnapshot child: dataSnapshot.getChildren()){
-                    Log.d("Child", child.toString());
                     GroupChatRoom group = new GroupChatRoom();
-                    group.setCreatedBy(child.child("createdBy").getValue().toString());
+                    group.setCreatedByName(child.child("createdByName").getValue().toString());
+                    group.setCreatedById(child.child("createdById").getValue().toString());
                     group.setCreatedOn(child.child("createdOn").getValue().toString());
                     group.setGroupId(child.child("groupId").getValue().toString());
                     group.setGroupName(child.child("groupName").getValue().toString());
                     ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
-                    if(group.getCreatedBy().equals(userId)){
+                    if(group.getCreatedById().equals(userId)){
                         for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
-                            Log.d("Child", group.getCreatedBy()+" , ********* "+child1.getKey());
+                            //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
                                 OnlineUser onlineUser = new OnlineUser();
                                 onlineUser.setUserId(child1.getKey());
                                 onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
@@ -80,7 +81,7 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
                     }else{
                         if(child.child("membersListWithOnlineStatus").hasChild(userId)){
                             for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
-                                Log.d("Child", group.getCreatedBy()+" , ********* "+child1.getKey());
+                                //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
                                 OnlineUser onlineUser = new OnlineUser();
                                 onlineUser.setUserId(child1.getKey());
                                 onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));

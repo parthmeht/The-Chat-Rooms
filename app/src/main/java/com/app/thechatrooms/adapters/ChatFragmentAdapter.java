@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final GroupChatRoom group = chatList.get(position);
-        if(group.getCreatedBy().equals(userId)) {
+        if(group.getCreatedById().equals(userId)) {
             holder.deleteButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setClickable(true);
         }else{
@@ -51,7 +52,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         }
         holder.joinButton.setVisibility(View.GONE);
         holder.joinButton.setClickable(false);
-        if(!group.getCreatedBy().equals(userId)) {
+        if(!group.getCreatedById().equals(userId)) {
             holder.leaveButton.setVisibility(View.VISIBLE);
             holder.leaveButton.setClickable(true);
         }else{
@@ -59,7 +60,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
             holder.leaveButton.setClickable(false);
         }
         holder.groupName.setText(group.getGroupName());
-        holder.createdBy.setText(group.getCreatedBy());
+        holder.createdBy.setText(group.getCreatedByName());
 
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
