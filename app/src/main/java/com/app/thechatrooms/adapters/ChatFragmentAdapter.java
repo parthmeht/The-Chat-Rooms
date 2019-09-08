@@ -2,17 +2,21 @@ package com.app.thechatrooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.ui.messages.MessageFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -75,6 +79,16 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
                 chatFragmentInterface.leaveGroup(group);
             }
         });
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle arguments = new Bundle();
+                arguments.putString("GroupID", group.getGroupId());
+                Fragment messageFragment = new MessageFragment();
+                messageFragment.setArguments(arguments);
+                chatFragmentInterface.openChat(messageFragment);
+            }
+        });
     }
 
     @Override
@@ -88,9 +102,11 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         ImageButton joinButton;
         ImageButton deleteButton;
         ImageButton leaveButton;
+        LinearLayout linearLayout;
 
         ViewHolder(View itemView){
             super(itemView);
+            linearLayout = itemView.findViewById(R.id.fragment_groups_item_texxtViewLinearLayout);
             groupName = itemView.findViewById(R.id.fragment_groups_item_groupName);
             createdBy = itemView.findViewById(R.id.fragment_groups_item_createdBy);
             joinButton = itemView.findViewById(R.id.fragment_groups_item_joinButton);
@@ -103,5 +119,6 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     public interface ChatFragmentInterface{
         void deleteGroup(GroupChatRoom groupChatRoom);
         void leaveGroup(GroupChatRoom groupChatRoom);
+        void openChat(Fragment fragment);
     }
 }
