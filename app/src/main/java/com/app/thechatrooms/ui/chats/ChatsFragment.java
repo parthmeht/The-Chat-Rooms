@@ -132,4 +132,11 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
         //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();*/
     }
+
+    @Override
+    public void openChat(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment);
+        fragmentTransaction.commit();
+    }
 }

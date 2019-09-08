@@ -8,6 +8,17 @@ public class Messages {
     private ArrayList<Boolean> likesUserId = new ArrayList<>();
     private String createdBy;
     private String createdOn;
+    private String groupId;
+
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
 
     public String getMessageId() {
         return messageId;

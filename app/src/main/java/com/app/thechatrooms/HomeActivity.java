@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.User;
@@ -251,6 +253,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 return true;
         }
         return true;
+
     }
 
     private class ChangeOnlineStatus extends AsyncTask<String, String, String>{
@@ -262,5 +265,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
+
+//    public static class FragTransaction{
+//        public FragTransaction(Fragment fragment) {
+//
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+//            fragmentTransaction.commit();
+//        }
+//
+//    }
+
+
 
 }

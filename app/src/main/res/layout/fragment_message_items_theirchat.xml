@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="10dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="60dp"
+    android:clipToPadding="false">
+
+    <View
+        android:id="@+id/fragment_message_items_theirchat_userImage"
+        android:layout_alignParentLeft="true"
+        android:scaleType="centerInside"
+        android:background="@drawable/circle"
+        android:layout_width="34dp"
+        android:layout_height="34dp" />
+
+    <TextView
+        android:id="@+id/fragment_message_items_theirchat_userName"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/fragment_message_items_theirchat_userImage"
+        android:layout_alignTop="@+id/fragment_message_items_theirchat_userImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:text="Rose"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_message_items_theirchat_userMessage"
+        android:layout_below="@+id/fragment_message_items_theirchat_userName"
+        android:layout_alignLeft="@+id/fragment_message_items_theirchat_userName"
+        android:background="@drawable/message_chat_bubble_others"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp"
+        android:elevation="2dp"
+        android:textSize="18dp"
+        android:text="Message"
+        />
+</RelativeLayout>

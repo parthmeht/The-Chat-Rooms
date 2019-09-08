@@ -2,17 +2,23 @@ package com.app.thechatrooms.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.thechatrooms.HomeActivity;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.ui.messages.MessageFragment;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -25,12 +31,14 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
     ArrayList<GroupChatRoom> groupList;
     String userId;
     GroupFragmentInterface groupFragmentInterface;
+    Activity a;
 
     public GroupFragmentAdapter(String user, ArrayList<GroupChatRoom> groupList, Activity a, Context context, GroupFragmentInterface groupFragmentInterface){
         this.groupList = groupList;
         this.context = context;
         this.userId = user;
         this.groupFragmentInterface = groupFragmentInterface;
+        this.a = a;
     }
 
 
@@ -53,6 +61,7 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
         holder.joinButton.setVisibility(View.VISIBLE);
         holder.joinButton.setClickable(true);
 
+
         holder.groupName.setText(group.getGroupName());
         holder.createdBy.setText(group.getCreatedByName());
 
@@ -62,6 +71,7 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
                 groupFragmentInterface.joinGroup(group);
             }
         });
+
     }
 
     @Override
@@ -75,8 +85,10 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
         ImageButton joinButton;
         ImageButton deleteButton;
 
+
         ViewHolder(View itemView){
             super(itemView);
+
             groupName = itemView.findViewById(R.id.fragment_groups_item_groupName);
             createdBy = itemView.findViewById(R.id.fragment_groups_item_createdBy);
             joinButton = itemView.findViewById(R.id.fragment_groups_item_joinButton);
@@ -87,5 +99,6 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
 
    public interface GroupFragmentInterface{
         void joinGroup(GroupChatRoom groupChatRoom);
+
     }
 }
