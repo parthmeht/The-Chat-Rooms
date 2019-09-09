@@ -75,7 +75,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/messages/" + groupId);
         groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
-        groupDbRef.addValueEventListener(new ValueEventListener() {
+        /*groupDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 hashMap.clear();
@@ -89,7 +89,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -146,7 +146,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
                 FragmentManager manager = getFragmentManager();
                 DialogFragment fragment = new ShowMembersFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Parameters.SHOW_MEMBERS,hashMap);
+                bundle.putString(Parameters.SHOW_MEMBERS,"chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
                 fragment.setArguments(bundle);
                 fragment.show(manager,"show_members");
                 return true;
