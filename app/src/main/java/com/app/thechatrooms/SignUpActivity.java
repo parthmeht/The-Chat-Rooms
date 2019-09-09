@@ -75,6 +75,13 @@ public class SignUpActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("chatRooms/userProfiles");
 
+        firstNameEditText.setText("");
+        lastNameEditText.setText("");
+        emailIdEditText.setText("");
+        passwordEditText.setText("");
+        confirmPasswordEditText.setText("");
+        cityEditText.setText("");
+
         firstNameEditText.addTextChangedListener(new TextValidator(firstNameEditText) {
             @Override
             public void validate(TextView textView, String text) {

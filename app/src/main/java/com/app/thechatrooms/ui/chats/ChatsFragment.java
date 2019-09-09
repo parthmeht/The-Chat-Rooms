@@ -122,7 +122,7 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
     @Override
     public void openMessageWindow(MessageFragment messageFragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, messageFragment);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, messageFragment,"Message Fragment").addToBackStack(null);
         fragmentTransaction.commit();
     }
 

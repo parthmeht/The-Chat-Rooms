@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "197975382411-fir7g3182ptsbkva9ukbsto87vjpdr5b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.thechatrooms",
+            "certificate_hash": "042a431c1c1c7ec52c7e4245024a5e09b6c2517c"
+          }
+        },
+        {
           "client_id": "197975382411-1ukqd80jjhf90kmnl3kncic8s75djble.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

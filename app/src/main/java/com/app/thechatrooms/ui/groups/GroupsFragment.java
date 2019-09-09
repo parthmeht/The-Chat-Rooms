@@ -107,10 +107,10 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
         fragment.setArguments(bundleGroup);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment, "Chat Fragment");
         NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.nav_chats);
-
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

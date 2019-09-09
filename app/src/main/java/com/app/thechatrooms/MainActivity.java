@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_signUpTextView).setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
             startActivity(intent);
+            emailEditText.setText("");
+            passwordTextBox.setText("");
         });
 
         forgotPasswordTextView.setOnClickListener(view -> {
@@ -175,4 +177,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

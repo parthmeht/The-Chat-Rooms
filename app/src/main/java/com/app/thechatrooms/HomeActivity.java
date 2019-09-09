@@ -25,6 +25,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.GroupOnlineUsers;
@@ -70,6 +72,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String userId;
     private String groupName;
     private NavigationView navigationView;
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction ;
 
     @Override
     protected void onStart() {
@@ -146,7 +150,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             bundle1.putSerializable(Parameters.USER_ID, user);
             ChatsFragment fragment1 = new ChatsFragment();
             fragment1.setArguments(bundle1);
-            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1).commit();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.nav_host_fragment, fragment1, "Chat Fragment").addToBackStack(null).commit();
             toolbar.setTitle(R.string.menu_chats);
             navigationView.setCheckedItem(R.id.nav_chats);
         }
@@ -155,11 +160,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        int backCount = fragmentManager.getBackStackEntryCount();
+        if(backCount > 1){
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+            fragmentManager.popBackStack();
+            //super.onBackPressed();
+        }else{
+            super.onBackPressed();
+        }
+       /* if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -179,7 +194,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 bundle1.putSerializable(Parameters.USER_ID, user);
                 ChatsFragment fragment1 = new ChatsFragment();
                 fragment1.setArguments(bundle1);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1).commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment1,"Chat Fragment").addToBackStack(null);
+                fragmentTransaction.commit();
                 toolbar.setTitle(R.string.menu_chats);
                 break;
             case R.id.nav_contacts:
@@ -191,7 +208,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 bundle.putSerializable(Parameters.USER_ID, user);
                 ProfileFragment fragment = new ProfileFragment();
                 fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment,"Profile Fragment").addToBackStack(null);
+                fragmentTransaction.commit();
                 toolbar.setTitle(R.string.menu_profile);
                 break;
             case R.id.nav_groups:
@@ -199,7 +218,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 bundleGroup.putSerializable(Parameters.USER_ID, user);
                 GroupsFragment groupsFragment = new GroupsFragment();
                 groupsFragment.setArguments(bundleGroup);
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, groupsFragment).commit();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, groupsFragment, "Group Fragment").addToBackStack(null);
+                fragmentTransaction.commit();
                 toolbar.setTitle(R.string.menu_groups);
                 break;
         }
@@ -249,7 +270,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             bundle.putSerializable(Parameters.USER_ID, user);
                             ChatsFragment fragment = new ChatsFragment();
                             fragment.setArguments(bundle);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
+                            fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.nav_host_fragment, fragment,"Chat Fragment").addToBackStack(null).commit();
                             toolbar.setTitle(R.string.menu_chats);
                             navigationView.setCheckedItem(R.id.nav_chats);
                         });
