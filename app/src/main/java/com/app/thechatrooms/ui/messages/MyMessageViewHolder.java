@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 
-public class MyMessageViewHolder extends RecyclerView.ViewHolder  {
+public class MyMessageViewHolder extends RecyclerView.ViewHolder {
     private TextView messageTextView, timeTextView, likeCountTextView;
     private ImageButton likeButton, deleteButton;
+
     public MyMessageViewHolder(@NonNull View itemView) {
         super(itemView);
         messageTextView = itemView.findViewById(R.id.myChat_messageTextView);

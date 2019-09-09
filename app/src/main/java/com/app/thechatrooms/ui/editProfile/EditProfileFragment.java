@@ -1,17 +1,8 @@
 package com.app.thechatrooms.ui.editProfile;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +14,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.User;
@@ -44,10 +42,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class EditProfileFragment extends Fragment {
 
-    private ProfileViewModel mViewModel;
-    private User user;
     private static final String TAG = "EditProfileFragment";
     private static int SELECT_PICTURE = 1;
+    private ProfileViewModel mViewModel;
+    private User user;
     private ImageView profileImage;
     private Uri selectedImageURI;
     private StorageReference mStorageRef;
@@ -85,7 +83,7 @@ public class EditProfileFragment extends Fragment {
             lastNameEditText.setText(user.getLastName());
             emailIdEditText.setText(user.getEmailId());
             cityEditText.setText(user.getCity());
-            if(user.getGender().equalsIgnoreCase("MALE"))
+            if (user.getGender().equalsIgnoreCase("MALE"))
                 maleButton.setChecked(true);
             else
                 femaleButton.setChecked(true);
@@ -93,7 +91,7 @@ public class EditProfileFragment extends Fragment {
 
         updateProfileButton.setOnClickListener(view -> {
             long size = 0;
-            if(selectedImageURI!=null){
+            if (selectedImageURI != null) {
                 File f = new File(selectedImageURI.getPath());
                 size = f.length();
             }
@@ -107,9 +105,9 @@ public class EditProfileFragment extends Fragment {
                 emailIdEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
             else if (Parameters.EMPTY.equalsIgnoreCase(cityEditText.getText().toString()))
                 cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
-            else if (selectedImageURI == null){
+            else if (selectedImageURI == null) {
                 Toast.makeText(getContext(), Parameters.UPLOAD_A_PROFILE_IMAGE, Toast.LENGTH_LONG).show();
-            }else if (size >= 5242880){
+            } else if (size >= 5242880) {
                 Toast.makeText(getContext(), Parameters.UPLOAD_IMAGE_LESS_THAN_5MB, Toast.LENGTH_LONG).show();
             } else {
                 int checkedRadioButtonId = gender.getCheckedRadioButtonId();
@@ -179,8 +177,8 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    public void uploadImage(String id){
-        StorageReference storageReference = mStorageRef.child("chatRooms/userProfiles/"+id+".jpg");
+    public void uploadImage(String id) {
+        StorageReference storageReference = mStorageRef.child("chatRooms/userProfiles/" + id + ".jpg");
 
         storageReference.putFile(selectedImageURI)
                 .addOnSuccessListener(taskSnapshot -> {
@@ -192,7 +190,7 @@ public class EditProfileFragment extends Fragment {
                     });
                 })
                 .addOnFailureListener(exception -> {
-                    Toast.makeText(getContext(),Parameters.UNABLE_TO_UPLOAD_IMAGE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), Parameters.UNABLE_TO_UPLOAD_IMAGE, Toast.LENGTH_LONG).show();
                 });
     }
 

@@ -2,6 +2,7 @@ package com.app.thechatrooms.models;
 
 public class GroupOnlineUsers {
     private String userId;
+    private boolean userOnlineStatus; //1 - online, 0 - offline
 
     public GroupOnlineUsers(String userId, boolean userOnlineStatus) {
         this.userId = userId;
@@ -23,7 +24,5 @@ public class GroupOnlineUsers {
     public void setUserOnlineStatus(boolean userOnlineStatus) {
         this.userOnlineStatus = userOnlineStatus;
     }
-
-    private boolean userOnlineStatus; //1 - online, 0 - offline
 
 }

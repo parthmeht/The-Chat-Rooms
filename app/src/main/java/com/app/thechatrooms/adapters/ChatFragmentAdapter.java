@@ -21,14 +21,14 @@ import com.app.thechatrooms.utilities.Parameters;
 
 import java.util.ArrayList;
 
-public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapter.ViewHolder>  {
+public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapter.ViewHolder> {
 
     Context context;
     User user;
     ArrayList<GroupChatRoom> groupList;
     ChatFragmentInterface chatFragmentInterface;
 
-    public ChatFragmentAdapter(User user, ArrayList<GroupChatRoom> groupList, Activity a, Context context, ChatFragmentInterface chatFragmentInterface){
+    public ChatFragmentAdapter(User user, ArrayList<GroupChatRoom> groupList, Activity a, Context context, ChatFragmentInterface chatFragmentInterface) {
         this.groupList = groupList;
         this.context = context;
         this.user = user;
@@ -46,19 +46,19 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final GroupChatRoom group = groupList.get(position);
-        if(group.getCreatedById().equals(user)) {
+        if (group.getCreatedById().equals(user)) {
             holder.deleteButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setClickable(true);
-        }else{
+        } else {
             holder.deleteButton.setVisibility(View.GONE);
             holder.deleteButton.setClickable(false);
         }
         holder.joinButton.setVisibility(View.GONE);
         holder.joinButton.setClickable(false);
-        if(!group.getCreatedById().equals(user)) {
+        if (!group.getCreatedById().equals(user)) {
             holder.leaveButton.setVisibility(View.VISIBLE);
             holder.leaveButton.setClickable(true);
-        }else{
+        } else {
             holder.leaveButton.setVisibility(View.GONE);
             holder.leaveButton.setClickable(false);
         }
@@ -85,7 +85,15 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         return groupList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public interface ChatFragmentInterface {
+        void deleteGroup(GroupChatRoom groupChatRoom);
+
+        void leaveGroup(GroupChatRoom groupChatRoom);
+
+        void openMessageWindow(MessageFragment messageFragment);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView groupName;
         TextView createdBy;
         ImageButton joinButton;
@@ -93,7 +101,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         ImageButton leaveButton;
         LinearLayout linearLayout;
 
-        ViewHolder(View itemView){
+        ViewHolder(View itemView) {
             super(itemView);
             linearLayout = itemView.findViewById(R.id.fragment_groups_item_texxtViewLinearLayout);
             groupName = itemView.findViewById(R.id.fragment_groups_item_groupName);
@@ -102,12 +110,5 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
             deleteButton = itemView.findViewById(R.id.fragment_groups_item_deleteButton);
             leaveButton = itemView.findViewById(R.id.fragment_groups_item_leaveButton);
         }
-
-    }
-
-    public interface ChatFragmentInterface{
-        void deleteGroup(GroupChatRoom groupChatRoom);
-        void leaveGroup(GroupChatRoom groupChatRoom);
-        void openMessageWindow(MessageFragment messageFragment);
     }
 }

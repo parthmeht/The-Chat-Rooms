@@ -3,13 +3,10 @@ package com.app.thechatrooms.ui.groups;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,9 +14,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.thechatrooms.adapters.*;
-
 import com.app.thechatrooms.R;
+import com.app.thechatrooms.adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
 import com.app.thechatrooms.models.User;
@@ -39,6 +35,8 @@ import java.util.ArrayList;
 
 public class GroupsFragment extends Fragment implements GroupFragmentAdapter.GroupFragmentInterface {
 
+    ArrayList<GroupChatRoom> groupList = new ArrayList<>();
+    View root;
     private GroupFragmentAdapter groupFragmentAdapter;
     private GroupsViewModel groupsViewModel;
     private StorageReference mStorageRef;
@@ -46,9 +44,7 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
     private User user;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
-    ArrayList<GroupChatRoom> groupList = new ArrayList<>();
     private FirebaseAuth mAuth;
-    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +65,7 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groupList.clear();
-                for (DataSnapshot child: dataSnapshot.getChildren()){
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     Log.d("Child", child.toString());
                     GroupChatRoom group = new GroupChatRoom();
                     group.setCreatedByName(child.child("createdByName").getValue().toString());
@@ -78,10 +74,9 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
                     group.setGroupId(child.child("groupId").getValue().toString());
                     group.setGroupName(child.child("groupName").getValue().toString());
                     ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
-                    if(!group.getCreatedById().equals(userId)){
-                        if(!child.child("membersListWithOnlineStatus").hasChild(userId)){
-                            for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
-                                //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
+                    if (!group.getCreatedById().equals(userId)) {
+                        if (!child.child("membersListWithOnlineStatus").hasChild(userId)) {
+                            for (DataSnapshot child1 : child.child("membersListWithOnlineStatus").getChildren()) {
                                 OnlineUser onlineUser = new OnlineUser();
                                 onlineUser.setUserId(child1.getKey());
                                 onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
@@ -95,20 +90,9 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
                 RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext(), GroupsFragment.this);
+                groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(), getContext(), GroupsFragment.this);
                 recyclerView.setAdapter(groupFragmentAdapter);
                 groupFragmentAdapter.notifyDataSetChanged();
-                /*for (DataSnapshot child: dataSnapshot.getChildren()){
-                    Log.d("Child", child.toString());
-                    GroupChatRoom group = child.getValue(GroupChatRoom.class);
-                    groupList.add(group);
-                    RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                    groupFragmentAdapter = new GroupFragmentAdapter(userId, groupList, getActivity(),getContext());
-                    recyclerView.setAdapter(groupFragmentAdapter);
-                    groupFragmentAdapter.notifyDataSetChanged();
-                }*/
             }
 
             @Override

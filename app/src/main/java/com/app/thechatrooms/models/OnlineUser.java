@@ -5,9 +5,10 @@ public class OnlineUser {
     private String userId;
     private int userOnlineStatus; //1 - online, 0 - offline
 
-    public OnlineUser(){
+    public OnlineUser() {
 
     }
+
     public OnlineUser(String userId, int userOnlineStatus) {
         this.userOnlineStatus = userOnlineStatus;
     }

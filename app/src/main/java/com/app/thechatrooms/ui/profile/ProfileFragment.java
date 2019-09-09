@@ -25,10 +25,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
+    private static final String TAG = "ProfileFragment";
     private FirebaseAuth mAuth;
     private User user;
     private ProfileViewModel profileViewModel;
-    private static final String TAG = "ProfileFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
             emailId.setText(user.getEmailId());
             city.setText(user.getCity());
             gender.setText(user.getGender());
-            if (currentUser!=null && currentUser.getUid().equals(user.getId()))
+            if (currentUser != null && currentUser.getUid().equals(user.getId()))
                 editProfileButton.setVisibility(View.VISIBLE);
 
             editProfileButton.setOnClickListener(view -> {

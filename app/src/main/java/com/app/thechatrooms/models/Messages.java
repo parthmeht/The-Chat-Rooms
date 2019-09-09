@@ -19,8 +19,8 @@ public class Messages {
         this.createdOn = createdOn;
     }
 
-    public Messages(){
-        
+    public Messages() {
+
     }
 
     public String getMessageId() {
@@ -71,8 +71,8 @@ public class Messages {
         this.createdOn = createdOn;
     }
 
-    public void addLikes(String id){
-        if (likesUserId==null)
+    public void addLikes(String id) {
+        if (likesUserId == null)
             likesUserId = new ArrayList<>();
         if (!likesUserId.contains(id))
             likesUserId.add(id);

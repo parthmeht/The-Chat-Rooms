@@ -23,27 +23,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int MY = 0, THEIR = 1;
     Context context;
     ArrayList<Messages> messagesArrayList;
     User user;
     String groupId;
     MessageInterface messageInterface;
-    private final int MY = 0, THEIR = 1;
     PrettyTime pt = new PrettyTime();
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
 
-    public MessageAdapter(User user, String groupId, ArrayList<Messages> messagesArrayList, Activity a, Context context, MessageInterface messageInterface){
+    public MessageAdapter(User user, String groupId, ArrayList<Messages> messagesArrayList, Activity a, Context context, MessageInterface messageInterface) {
         this.messagesArrayList = messagesArrayList;
         this.groupId = groupId;
         this.user = user;
         this.context = context;
         this.messageInterface = messageInterface;
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("chatRooms/messages/"+ this.groupId);
+        myRef = firebaseDatabase.getReference("chatRooms/messages/" + this.groupId);
     }
 
     @Override
@@ -59,10 +58,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType==MY){
+        if (viewType == MY) {
             View v1 = inflater.inflate(R.layout.fragment_message_items_mychat, parent, false);
             viewHolder = new MyMessageViewHolder(v1);
-        }else{
+        } else {
             View v1 = inflater.inflate(R.layout.fragment_message_items_theirchat, parent, false);
             viewHolder = new TheirMessageViewHolder(v1);
         }
@@ -72,14 +71,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         try {
-            if (holder.getItemViewType()==MY){
+            if (holder.getItemViewType() == MY) {
                 MyMessageViewHolder vh1 = (MyMessageViewHolder) holder;
                 configureMyMessageViewHolder(vh1, position);
-            }else{
+            } else {
                 TheirMessageViewHolder vh1 = (TheirMessageViewHolder) holder;
                 configureTheirMessageViewHolder(vh1, position);
             }
-        }catch (ParseException ex){
+        } catch (ParseException ex) {
             ex.printStackTrace();
         }
     }
@@ -88,14 +87,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Messages messages = messagesArrayList.get(position);
         viewHolder.getSenderNameTextView().setText(messages.getCreatedByName());
         viewHolder.getMessageTextView().setText(messages.getMessage());
-        if (messages.getLikesUserId()!=null) {
+        if (messages.getLikesUserId() != null) {
             viewHolder.getLikeCountTextView().setText(Integer.toString(messages.getLikesUserId().size()));
-            if (messages.checkLikeId(user.getId())){
+            if (messages.checkLikeId(user.getId())) {
                 viewHolder.getLikeButton().setImageResource(R.drawable.ic_thumb_up_dark_blue);
                 viewHolder.getLikeButton().setEnabled(false);
             }
-        }
-        else
+        } else
             viewHolder.getLikeCountTextView().setText(Integer.toString(0));
         Date date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(messages.getCreatedOn());
         viewHolder.getTimeTextView().setText(pt.format(date));
@@ -108,14 +106,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void configureMyMessageViewHolder(MyMessageViewHolder viewHolder, int position) throws ParseException {
         Messages messages = messagesArrayList.get(position);
         viewHolder.getMessageTextView().setText(messages.getMessage());
-        if (messages.getLikesUserId()!=null) {
+        if (messages.getLikesUserId() != null) {
             viewHolder.getLikeCountTextView().setText(Integer.toString(messages.getLikesUserId().size()));
-            if (messages.checkLikeId(user.getId())){
+            if (messages.checkLikeId(user.getId())) {
                 viewHolder.getLikeButton().setImageResource(R.drawable.ic_thumb_up_dark_blue);
                 viewHolder.getLikeButton().setEnabled(false);
             }
-        }
-        else
+        } else
             viewHolder.getLikeCountTextView().setText(Integer.toString(0));
         Date date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(messages.getCreatedOn());
         viewHolder.getTimeTextView().setText(pt.format(date));
@@ -134,7 +131,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public interface MessageInterface{
+    public interface MessageInterface {
 
     }
 

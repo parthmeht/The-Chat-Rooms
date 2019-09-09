@@ -26,7 +26,7 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
     FirebaseDatabase dbRef;
     ArrayList<User> userList;
 
-    public ContactsRecyclerView(ArrayList<User> userList, Activity a, Context context){
+    public ContactsRecyclerView(ArrayList<User> userList, Activity a, Context context) {
         this.userList = userList;
         this.context = context;
     }
@@ -44,7 +44,7 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final User user = userList.get(position);
-        holder.contactName.setText(user.getFirstName()+ " " +user.getLastName());
+        holder.contactName.setText(user.getFirstName() + " " + user.getLastName());
         Picasso.get()
                 .load(user.getUserProfileImageUrl())
                 .transform(new CircleTransform()).centerCrop().fit()
@@ -61,17 +61,16 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
         return userList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        TextView contactName ;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView contactName;
         ImageView isOnline;
         ImageView profileImage;
-        ViewHolder(View itemView){
+
+        ViewHolder(View itemView) {
             super(itemView);
             contactName = itemView.findViewById(R.id.fragment_contacts_item_userName);
             profileImage = itemView.findViewById(R.id.fragment_contacts_item_userImage);
             isOnline = itemView.findViewById(R.id.fragment_contacts_item_isOnlineButton);
         }
-
     }
 }

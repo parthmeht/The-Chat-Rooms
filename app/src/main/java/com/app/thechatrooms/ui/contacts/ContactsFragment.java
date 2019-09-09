@@ -30,13 +30,12 @@ import java.util.ArrayList;
 public class ContactsFragment extends Fragment {
 
     private static final String TAG = "ContactsFragment";
+    OnContactsSelectedListener callback;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     private ArrayList<User> userList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ContactsRecyclerView contactsRecyclerView;
-
-    OnContactsSelectedListener callback;
 
     public void setOnContactsSelectedListener(OnContactsSelectedListener callback) {
         this.callback = callback;
@@ -52,12 +51,12 @@ public class ContactsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
-                for(DataSnapshot child :  dataSnapshot.getChildren()){
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     Log.d("CHILD", child.toString());
                     User user = child.getValue(User.class);
                     userList.add(user);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    contactsRecyclerView = new ContactsRecyclerView(userList, getActivity(),getContext());
+                    contactsRecyclerView = new ContactsRecyclerView(userList, getActivity(), getContext());
                     recyclerView.setAdapter(contactsRecyclerView);
                     contactsRecyclerView.notifyDataSetChanged();
                 }
@@ -69,11 +68,11 @@ public class ContactsFragment extends Fragment {
             }
         });
 
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 User recyclerUser = userList.get(position);
-                Log.v(TAG,recyclerUser.toString());
+                Log.v(TAG, recyclerUser.toString());
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Parameters.USER_ID, recyclerUser);
                 ProfileFragment fragment = new ProfileFragment();

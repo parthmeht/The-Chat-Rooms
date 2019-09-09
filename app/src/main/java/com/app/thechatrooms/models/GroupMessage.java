@@ -6,6 +6,14 @@ public class GroupMessage {
     private String groupId;
     private ArrayList<Messages> messageList;
 
+    public GroupMessage() {
+    }
+
+    public GroupMessage(String groupId, ArrayList<Messages> messageList) {
+        this.groupId = groupId;
+        this.messageList = messageList;
+    }
+
     public String getGroupId() {
         return groupId;
     }
@@ -19,14 +27,6 @@ public class GroupMessage {
     }
 
     public void setMessageList(ArrayList<Messages> messageList) {
-        this.messageList = messageList;
-    }
-
-    public GroupMessage() {
-    }
-
-    public GroupMessage(String groupId, ArrayList<Messages> messageList) {
-        this.groupId = groupId;
         this.messageList = messageList;
     }
 }

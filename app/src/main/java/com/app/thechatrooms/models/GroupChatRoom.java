@@ -49,6 +49,7 @@ public class GroupChatRoom {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
+
     public String getCreatedById() {
         return createdById;
     }

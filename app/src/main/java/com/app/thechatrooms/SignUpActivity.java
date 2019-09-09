@@ -1,7 +1,5 @@
 package com.app.thechatrooms;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -15,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.utilities.CircleTransform;
@@ -41,14 +41,22 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
     private static int SELECT_PICTURE = 1;
 
-    @BindView(R.id.signUp_userProfileImageView) ImageView userProfileImageView;
-    @BindView (R.id.signUp_firstNameEditText) EditText firstNameEditText;
-    @BindView (R.id.signUp_lastNameEditText) EditText lastNameEditText;
-    @BindView (R.id.signUp_emailEditText) EditText emailIdEditText;
-    @BindView (R.id.signUp_passwordEditText) EditText passwordEditText;
-    @BindView (R.id.signUp_confirmPasswordEditText) EditText confirmPasswordEditText;
-    @BindView (R.id.signUp_cityEditText) EditText cityEditText;
-    @BindView (R.id.signUp_genderRadioGroup) RadioGroup genderRadioGroup;
+    @BindView(R.id.signUp_userProfileImageView)
+    ImageView userProfileImageView;
+    @BindView(R.id.signUp_firstNameEditText)
+    EditText firstNameEditText;
+    @BindView(R.id.signUp_lastNameEditText)
+    EditText lastNameEditText;
+    @BindView(R.id.signUp_emailEditText)
+    EditText emailIdEditText;
+    @BindView(R.id.signUp_passwordEditText)
+    EditText passwordEditText;
+    @BindView(R.id.signUp_confirmPasswordEditText)
+    EditText confirmPasswordEditText;
+    @BindView(R.id.signUp_cityEditText)
+    EditText cityEditText;
+    @BindView(R.id.signUp_genderRadioGroup)
+    RadioGroup genderRadioGroup;
 
     private StorageReference mStorageRef;
     private FirebaseAuth mAuth;
@@ -104,7 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void validate(TextView textView, String text) {
                 if (Parameters.EMPTY.equalsIgnoreCase(text))
                     textView.setError(Parameters.EMPTY_ERROR_MESSAGE);
-                else if(!passwordEditText.getText().toString().equals(text))
+                else if (!passwordEditText.getText().toString().equals(text))
                     textView.setError(Parameters.INCORRECT_CONFIRM_PASSWORD);
             }
         });
@@ -127,13 +135,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.signUp_signUpButton) public void submit(View view){
+    @OnClick(R.id.signUp_signUpButton)
+    public void submit(View view) {
         long size = 0;
-        if(selectedImageURI!=null){
+        if (selectedImageURI != null) {
             File f = new File(selectedImageURI.getPath());
             size = f.length();
         }
-        
+
 
         if (Parameters.EMPTY.equalsIgnoreCase(firstNameEditText.getText().toString()))
             firstNameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
@@ -145,13 +154,13 @@ public class SignUpActivity extends AppCompatActivity {
             passwordEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (Parameters.EMPTY.equalsIgnoreCase(confirmPasswordEditText.getText().toString()))
             confirmPasswordEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
-        else if(!passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString()))
+        else if (!passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString()))
             confirmPasswordEditText.setError(Parameters.INCORRECT_CONFIRM_PASSWORD);
         else if (Parameters.EMPTY.equalsIgnoreCase(cityEditText.getText().toString()))
             cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
-        else if (selectedImageURI == null){
+        else if (selectedImageURI == null) {
             Toast.makeText(this, Parameters.UPLOAD_A_PROFILE_IMAGE, Toast.LENGTH_LONG).show();
-        }else if (size >= 5242880){
+        } else if (size >= 5242880) {
             Toast.makeText(this, Parameters.UPLOAD_IMAGE_LESS_THAN_5MB, Toast.LENGTH_LONG).show();
         } else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
@@ -184,8 +193,8 @@ public class SignUpActivity extends AppCompatActivity {
         updateUI(user.getId());
     }
 
-    public void uploadImage(String id){
-        StorageReference storageReference = mStorageRef.child("chatRooms/userProfiles/"+id+".jpg");
+    public void uploadImage(String id) {
+        StorageReference storageReference = mStorageRef.child("chatRooms/userProfiles/" + id + ".jpg");
 
         storageReference.putFile(selectedImageURI)
                 .addOnSuccessListener(taskSnapshot -> {
@@ -199,7 +208,7 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                 })
                 .addOnFailureListener(exception -> {
-                    Toast.makeText(getApplicationContext(),Parameters.UNABLE_TO_UPLOAD_IMAGE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), Parameters.UNABLE_TO_UPLOAD_IMAGE, Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -218,21 +227,20 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null)
+        if (currentUser != null)
             updateUI(currentUser.getUid());
     }
 
     private void updateUI(String userId) {
-        if (userId!=null){
+        if (userId != null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(Parameters.USER_ID,userId);
+            editor.putString(Parameters.USER_ID, userId);
             Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
             startActivity(intent);
         }

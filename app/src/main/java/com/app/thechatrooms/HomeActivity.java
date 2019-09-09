@@ -51,6 +51,10 @@ import java.util.Date;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ContactsFragment.OnContactsSelectedListener {
 
     private static final String TAG = "HomeActivity";
+    StorageReference storageReference;
+    ImageView userProfileImageView;
+    TextView displayNameTextView;
+    TextView displayEmailIdTextView;
     //private AppBarConfiguration mAppBarConfiguration;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
@@ -65,10 +69,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String userId;
     private String groupName;
     private NavigationView navigationView;
-    StorageReference storageReference;
-    ImageView userProfileImageView;
-    TextView displayNameTextView;
-    TextView displayEmailIdTextView;
 
     @Override
     protected void onStart() {
@@ -92,9 +92,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = preferences.getString(Parameters.USER_ID, "");
         groupChatDbRef = database.getReference("chatRooms/groupChatRoom/");
-        if(!userId.equalsIgnoreCase("")) {
-            myRef = database.getReference("chatRooms/userProfiles/"+userId);
-            storageReference = mStorageRef.child("chatRooms/userProfiles/"+userId+".jpg");
+        if (!userId.equalsIgnoreCase("")) {
+            myRef = database.getReference("chatRooms/userProfiles/" + userId);
+            storageReference = mStorageRef.child("chatRooms/userProfiles/" + userId + ".jpg");
             // Read from the database
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -102,7 +102,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     user = dataSnapshot.getValue(User.class);
-                    displayNameTextView.setText(user.getFirstName()+ " " + user.getLastName());
+                    displayNameTextView.setText(user.getFirstName() + " " + user.getLastName());
                     displayEmailIdTextView.setText(user.getEmailId());
                     Log.d(TAG, "Value is: " + user.toString());
                     Picasso.get()
@@ -135,12 +135,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
         displayNameTextView = hView.findViewById(R.id.displayNameTextView);
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
         userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Bundle bundle1 = new Bundle();
             bundle1.putSerializable(Parameters.USER_ID, user);
             ChatsFragment fragment1 = new ChatsFragment();
@@ -154,9 +154,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -172,7 +172,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.nav_chats:
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable(Parameters.USER_ID, user);
@@ -205,6 +205,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
@@ -225,14 +226,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.setPositiveButton("Create",
                         (dialog, which) -> {
                             groupName = input.getText().toString();
-                            Log.e(TAG,"groupName = "+groupName);
+                            Log.e(TAG, "groupName = " + groupName);
                             GroupChatRoom groupChatRoom = new GroupChatRoom();
 
                             String grpId = groupChatDbRef.push().getKey();
                             String createdOn = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
                             groupChatRoom.setGroupId(grpId);
                             groupChatRoom.setGroupName(groupName);
-                            groupChatRoom.setCreatedByName(user.getFirstName()+" "+user.getLastName());
+                            groupChatRoom.setCreatedByName(user.getFirstName() + " " + user.getLastName());
                             groupChatRoom.setCreatedById(user.getId());
                             groupChatRoom.setCreatedOn(createdOn);
                             groupChatDbRef.child(grpId).setValue(groupChatRoom);
@@ -264,21 +265,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setTitle(title);
     }
 
-    private class ChangeOnlineStatus extends AsyncTask<String, String, String>{
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if (fragment instanceof ContactsFragment) {
+            ContactsFragment contactsFragment = (ContactsFragment) fragment;
+            contactsFragment.setOnContactsSelectedListener(this);
+        }
+    }
+
+    private class ChangeOnlineStatus extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
             myRef = database.getReference("chatRooms/userProfiles/");
             myRef.child(userId).child("online").setValue(true);
             return null;
 
-        }
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        if (fragment instanceof ContactsFragment) {
-            ContactsFragment contactsFragment = (ContactsFragment) fragment;
-            contactsFragment.setOnContactsSelectedListener(this);
         }
     }
 
@@ -291,7 +292,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //        }
 //
 //    }
-
 
 
 }

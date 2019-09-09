@@ -40,15 +40,15 @@ import java.util.Date;
 public class MessageFragment extends Fragment implements MessageAdapter.MessageInterface {
 
     private static final String TAG = "MessageFragment";
+    ArrayList<Messages> messagesArrayList = new ArrayList<>();
+    ArrayList<GroupOnlineUsers> onlineUserArrayList = new ArrayList<>();
+    GroupOnlineMembersAdapter groupOnlineMembersAdapter;
     private MessageAdapter messageAdapter;
     private User user;
     private DatabaseReference myRef, groupDbRef;
     private FirebaseDatabase firebaseDatabase;
-    ArrayList<Messages> messagesArrayList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private String groupId;
-    ArrayList<GroupOnlineUsers> onlineUserArrayList = new ArrayList<>();
-    GroupOnlineMembersAdapter groupOnlineMembersAdapter;
 
     public MessageFragment() {
         // Required empty public constructor
@@ -67,7 +67,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("chatRooms/messages/"+ groupId);
+        myRef = firebaseDatabase.getReference("chatRooms/messages/" + groupId);
         /*groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
         groupDbRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,12 +97,12 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesArrayList.clear();
-                for (DataSnapshot val: dataSnapshot.getChildren()){
+                for (DataSnapshot val : dataSnapshot.getChildren()) {
                     Messages messages = val.getValue(Messages.class);
                     messagesArrayList.add(messages);
                     RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recyclerView);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    messageAdapter = new MessageAdapter(user,groupId, messagesArrayList, getActivity(), getContext(), MessageFragment.this);
+                    messageAdapter = new MessageAdapter(user, groupId, messagesArrayList, getActivity(), getContext(), MessageFragment.this);
                     recyclerView.setAdapter(messageAdapter);
                     messageAdapter.notifyDataSetChanged();
                 }
@@ -114,11 +114,11 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
             }
         });
         sendButton.setOnClickListener(view1 -> {
-            if (!editText.getText().toString().isEmpty()){
+            if (!editText.getText().toString().isEmpty()) {
                 String messageId = myRef.push().getKey();
                 String createdOn = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
-                Messages messages = new Messages(messageId,editText.getText().toString(),user.getId(),
-                        user.getFirstName()+" "+user.getLastName(), createdOn);
+                Messages messages = new Messages(messageId, editText.getText().toString(), user.getId(),
+                        user.getFirstName() + " " + user.getLastName(), createdOn);
                 myRef.child(messageId).setValue(messages);
                 editText.setText("");
                 hideKeyboard(getContext(), view1);
@@ -126,7 +126,8 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         });
         return view;
     }
-    public void hideKeyboard(Context context, View view){
+
+    public void hideKeyboard(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }

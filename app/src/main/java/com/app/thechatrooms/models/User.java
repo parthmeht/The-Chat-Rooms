@@ -21,7 +21,7 @@ public class User implements Serializable {
         this.online = online;
     }
 
-    public User(){
+    public User() {
 
     }
 
