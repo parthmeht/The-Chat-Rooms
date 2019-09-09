@@ -51,7 +51,6 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
     private String userId;
     private FirebaseDatabase database;
     private static final String TAG = "ChatsFragment";
-    private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
-        recyclerView = view.findViewById(R.id.fragment_chats_recycler_view);
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
 
         if (user==null){
@@ -120,7 +118,7 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
                 RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                chatFragmentAdapter = new ChatFragmentAdapter(userId, groupList, getActivity(),getContext(), ChatsFragment.this);
+                chatFragmentAdapter = new ChatFragmentAdapter(user, groupList, getActivity(),getContext(), ChatsFragment.this);
                 recyclerView.setAdapter(chatFragmentAdapter);
                 chatFragmentAdapter.notifyDataSetChanged();
             }
@@ -130,26 +128,6 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
 
             }
         });
-
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(View view, int position) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Parameters.USER_ID, user);
-                bundle.putString("GroupID", groupList.get(position).getGroupId());
-                MessageFragment messageFragment = new MessageFragment();
-                messageFragment.setArguments(bundle);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, messageFragment);
-                fragmentTransaction.commit();
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
 
         return view;
     }
@@ -176,6 +154,13 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
         //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();*/
+    }
+
+    @Override
+    public void openMessageWindow(MessageFragment messageFragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, messageFragment);
+        fragmentTransaction.commit();
     }
 
 }
