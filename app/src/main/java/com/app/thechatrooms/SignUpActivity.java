@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
@@ -149,9 +150,9 @@ public class SignUpActivity extends AppCompatActivity {
         else if (Parameters.EMPTY.equalsIgnoreCase(cityEditText.getText().toString()))
             cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (selectedImageURI == null){
-            Toast.makeText(this, "Upload a profile Image", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Parameters.UPLOAD_A_PROFILE_IMAGE, Toast.LENGTH_LONG).show();
         }else if (size >= 5242880){
-            Toast.makeText(this, "Uploaded image should be less than 5 MB", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Parameters.UPLOAD_IMAGE_LESS_THAN_5MB, Toast.LENGTH_LONG).show();
         } else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(checkedRadioButtonId);
@@ -198,7 +199,7 @@ public class SignUpActivity extends AppCompatActivity {
                     });
                 })
                 .addOnFailureListener(exception -> {
-                    Toast.makeText(getApplicationContext(),"Unable to upload profile image! Try with a smaller image", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),Parameters.UNABLE_TO_UPLOAD_IMAGE, Toast.LENGTH_LONG).show();
                 });
     }
 

@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.ui.messages.MessageFragment;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -66,29 +64,10 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         holder.groupName.setText(group.getGroupName());
         holder.createdBy.setText(group.getCreatedByName());
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chatFragmentInterface.deleteGroup(group);
-            }
-        });
+        holder.deleteButton.setOnClickListener(view -> chatFragmentInterface.deleteGroup(group));
 
-        holder.leaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chatFragmentInterface.leaveGroup(group);
-            }
-        });
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle arguments = new Bundle();
-                arguments.putString("GroupID", group.getGroupId());
-                Fragment messageFragment = new MessageFragment();
-                messageFragment.setArguments(arguments);
-                chatFragmentInterface.openChat(messageFragment);
-            }
-        });
+        holder.leaveButton.setOnClickListener(view -> chatFragmentInterface.leaveGroup(group));
+
     }
 
     @Override
@@ -119,6 +98,5 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     public interface ChatFragmentInterface{
         void deleteGroup(GroupChatRoom groupChatRoom);
         void leaveGroup(GroupChatRoom groupChatRoom);
-        void openChat(Fragment fragment);
     }
 }

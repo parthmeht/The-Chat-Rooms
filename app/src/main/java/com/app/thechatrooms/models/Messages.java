@@ -5,30 +5,23 @@ import java.util.ArrayList;
 public class Messages {
     private String messageId;
     private String message;
-    private ArrayList<Boolean> likesUserId = new ArrayList<>();
+    private ArrayList<String> likesUserId;
     private String createdBy;
-
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
     private String createdByName;
     private String createdOn;
-    private String groupId;
 
-
-    public String getGroupId() {
-        return groupId;
+    public Messages(String messageId, String message, String createdBy, String createdByName, String createdOn) {
+        this.messageId = messageId;
+        this.message = message;
+        this.likesUserId = new ArrayList<>();
+        this.createdBy = createdBy;
+        this.createdByName = createdByName;
+        this.createdOn = createdOn;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public Messages(){
+        
     }
-
 
     public String getMessageId() {
         return messageId;
@@ -46,12 +39,28 @@ public class Messages {
         this.message = message;
     }
 
+    public ArrayList<String> getLikesUserId() {
+        return likesUserId;
+    }
+
+    public void setLikesUserId(ArrayList<String> likesUserId) {
+        this.likesUserId = likesUserId;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getCreatedByName() {
+        return createdByName;
+    }
+
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
     }
 
     public String getCreatedOn() {
@@ -62,11 +71,28 @@ public class Messages {
         this.createdOn = createdOn;
     }
 
-    public ArrayList<Boolean> getLikesUserId() {
-        return likesUserId;
+    public void addLikes(String id){
+        if (likesUserId==null)
+            likesUserId = new ArrayList<>();
+        if (!likesUserId.contains(id))
+            likesUserId.add(id);
     }
 
-    public void setLikesUserId(ArrayList<Boolean> likesUserId) {
-        this.likesUserId = likesUserId;
+    @Override
+    public String toString() {
+        return "Messages{" +
+                "messageId='" + messageId + '\'' +
+                ", message='" + message + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdByName='" + createdByName + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                '}';
+    }
+
+    public boolean checkLikeId(String id) {
+        if (likesUserId.contains(id))
+            return true;
+        else
+            return false;
     }
 }

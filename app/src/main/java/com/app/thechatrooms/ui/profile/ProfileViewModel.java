@@ -9,7 +9,7 @@ import com.app.thechatrooms.models.User;
 public class ProfileViewModel extends ViewModel {
     private MutableLiveData<User> userMutableLiveData;
 
-    public ProfileViewModel(){
+    public ProfileViewModel() {
         userMutableLiveData = new MutableLiveData<>();
     }
 

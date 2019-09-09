@@ -117,20 +117,16 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
             }
         });
 
-//        groupsViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         return root;
     }
 
     @Override
     public void joinGroup(GroupChatRoom groupChatRoom) {
         myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(1);
-        Fragment fragment = new ChatsFragment();
-
+        Bundle bundleGroup = new Bundle();
+        bundleGroup.putSerializable(Parameters.USER_ID, user);
+        ChatsFragment fragment = new ChatsFragment();
+        fragment.setArguments(bundleGroup);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment);

@@ -4,13 +4,6 @@ package com.app.thechatrooms.ui.messages;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +11,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.adapters.GroupOnlineMembersAdapter;
 import com.app.thechatrooms.adapters.MessageAdapter;
-import com.app.thechatrooms.models.Messages;
 import com.app.thechatrooms.models.GroupOnlineUsers;
+import com.app.thechatrooms.models.Messages;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.utilities.Parameters;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +46,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
     private FirebaseDatabase firebaseDatabase;
     ArrayList<Messages> messagesArrayList = new ArrayList<>();
     private FirebaseAuth mAuth;
-    private String groupdId;
+    private String groupId;
     ArrayList<GroupOnlineUsers> onlineUserArrayList = new ArrayList<>();
     GroupOnlineMembersAdapter groupOnlineMembersAdapter;
 
@@ -63,21 +63,17 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         ImageButton sendButton = view.findViewById(R.id.fragment_chats_send_button);
 
         mAuth = FirebaseAuth.getInstance();
-        String s = getArguments().getString("GroupID");
-        Log.d("SSS",s);
-
-        String userId = mAuth.getCurrentUser().getUid();
-        String userName = mAuth.getCurrentUser().getDisplayName();
+        groupId = getArguments().getString("GroupID");
+        user = (User) getArguments().getSerializable(Parameters.USER_ID);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("chatRooms/messages/"+s);
-        groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+s+"/membersListWithOnlineStatus");
+        myRef = firebaseDatabase.getReference("chatRooms/messages/"+ groupId);
+        /*groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
         groupDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 onlineUserArrayList.clear();
                 for (DataSnapshot val: dataSnapshot.getChildren()){
-
                     String id = val.getKey();
                     boolean online = (boolean) val.getValue();
                     GroupOnlineUsers onlineUser = new GroupOnlineUsers(id, online);
@@ -88,7 +84,6 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
                     groupOnlineMembersAdapter = new GroupOnlineMembersAdapter(onlineUserArrayList,getActivity(), getContext());
                     recyclerView.setAdapter(groupOnlineMembersAdapter);
                     groupOnlineMembersAdapter.notifyDataSetChanged();
-
                 }
             }
 
@@ -96,22 +91,20 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesArrayList.clear();
                 for (DataSnapshot val: dataSnapshot.getChildren()){
-                    if(val.child("groupId").getValue() == groupdId){
-                        Messages messages = val.getValue(Messages.class);
-                        messagesArrayList.add(messages);
-                        RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recyclerView);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        messageAdapter = new MessageAdapter(userId, messagesArrayList, getActivity(), getContext(), MessageFragment.this);
-                        recyclerView.setAdapter(messageAdapter);
-                        messageAdapter.notifyDataSetChanged();
-                    }
+                    Messages messages = val.getValue(Messages.class);
+                    messagesArrayList.add(messages);
+                    RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recyclerView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    messageAdapter = new MessageAdapter(user,groupId, messagesArrayList, getActivity(), getContext(), MessageFragment.this);
+                    recyclerView.setAdapter(messageAdapter);
+                    messageAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -120,26 +113,17 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
 
             }
         });
-        sendButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (!editText.getText().toString().isEmpty()){
-
-                    String messageId = myRef.push().getKey();
-                    Messages messages = new Messages();
-                    messages.setMessageId(messageId);
-                    messages.setGroupId(groupdId);
-                    messages.setMessage(editText.getText().toString());
-                    messages.setCreatedBy(userId);
-                    messages.setCreatedByName(userName);
-                    myRef.child(messageId).setValue(messages);
-                    editText.setText("");
-                    hideKeyboard(getContext(), view);
-                }
+        sendButton.setOnClickListener(view1 -> {
+            if (!editText.getText().toString().isEmpty()){
+                String messageId = myRef.push().getKey();
+                String createdOn = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
+                Messages messages = new Messages(messageId,editText.getText().toString(),user.getId(),
+                        user.getFirstName()+" "+user.getLastName(), createdOn);
+                myRef.child(messageId).setValue(messages);
+                editText.setText("");
+                hideKeyboard(getContext(), view1);
             }
         });
-        // Inflate the layout for this fragment
         return view;
     }
     public void hideKeyboard(Context context, View view){
@@ -147,8 +131,4 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    @Override
-    public void deleteMessage(String messageId) {
-        myRef.child(messageId).setValue(null);
-    }
 }

@@ -23,7 +23,9 @@ import com.app.thechatrooms.adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
 import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.ui.messages.MessageFragment;
 import com.app.thechatrooms.utilities.Parameters;
+import com.app.thechatrooms.utilities.RecyclerItemClickListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,16 +49,34 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private String userId;
+    private FirebaseDatabase database;
+    private static final String TAG = "ChatsFragment";
+    private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_chats, container, false);
-
+        database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
-
+        recyclerView = view.findViewById(R.id.fragment_chats_recycler_view);
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
+
+        if (user==null){
+            myRef = database.getReference("chatRooms/userProfiles/"+userId);
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    user = dataSnapshot.getValue(User.class);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w(TAG, "Failed to read value.", databaseError.toException());
+                }
+            });
+        }
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
@@ -111,6 +131,26 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
             }
         });
 
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(),recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View view, int position) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Parameters.USER_ID, user);
+                bundle.putString("GroupID", groupList.get(position).getGroupId());
+                MessageFragment messageFragment = new MessageFragment();
+                messageFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, messageFragment);
+                fragmentTransaction.commit();
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+
         return view;
     }
 
@@ -138,10 +178,4 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
         fragmentTransaction.commit();*/
     }
 
-    @Override
-    public void openChat(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment);
-        fragmentTransaction.commit();
-    }
 }

@@ -194,7 +194,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(R.string.menu_profile);
                 break;
             case R.id.nav_groups:
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new GroupsFragment()).commit();
+                Bundle bundleGroup = new Bundle();
+                bundleGroup.putSerializable(Parameters.USER_ID, user);
+                GroupsFragment groupsFragment = new GroupsFragment();
+                groupsFragment.setArguments(bundleGroup);
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, groupsFragment).commit();
                 toolbar.setTitle(R.string.menu_groups);
                 break;
         }

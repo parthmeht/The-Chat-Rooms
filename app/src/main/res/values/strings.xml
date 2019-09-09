@@ -41,4 +41,8 @@
     <string name="delete">delete</string>
     <string name="remove">remove</string>
     <string name="editProfile">Edit Profile</string>
+    <string name="update">Update</string>
+    <string name="send">Send</string>
+    <string name="enter_your_message">Enter your message</string>
+    <string name="like">Like</string>
 </resources>

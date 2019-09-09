@@ -7,15 +7,6 @@
     tools:context=".ui.messages.MessageFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_message_active_users"
-        android:layout_width="0dp"
-        android:layout_height="75dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -31,15 +22,18 @@
             android:layout_height="match_parent"
             android:layout_weight="6"
             android:ems="10"
-            android:hint="Enter your message"
+            android:hint="@string/enter_your_message"
             android:inputType="textPersonName"
-            android:textColorHint="#515656" />
+            android:textColorHint="#515656"
+            android:importantForAutofill="no" />
 
         <ImageButton
             android:id="@+id/fragment_chats_send_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/send"
             app:srcCompat="@android:drawable/ic_menu_send" />
     </LinearLayout>
 
@@ -50,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_message_active_users">
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 

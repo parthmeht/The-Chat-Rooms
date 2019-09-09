@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipToPadding="false"
     android:paddingVertical="10dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="60dp"
-    android:clipToPadding="false">
-
-    <View
-        android:id="@+id/fragment_message_items_theirchat_userImage"
-        android:layout_alignParentLeft="true"
-        android:scaleType="centerInside"
-        android:background="@drawable/circle"
-        android:layout_width="34dp"
-        android:layout_height="34dp" />
+    tools:targetApi="o">
 
     <TextView
-        android:id="@+id/fragment_message_items_theirchat_userName"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/fragment_message_items_theirchat_userImage"
-        android:layout_alignTop="@+id/fragment_message_items_theirchat_userImage"
+        android:id="@+id/theirChat_senderNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="1dp"
         android:paddingBottom="4dp"
-        android:text="sender"/>
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/theirChat_messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fragment_message_items_theirchat_userMessage"
-        android:layout_below="@+id/fragment_message_items_theirchat_userName"
-        android:layout_alignLeft="@+id/fragment_message_items_theirchat_userName"
+        android:layout_below="@+id/theirChat_senderNameTextView"
+        android:layout_alignStart="@+id/theirChat_senderNameTextView"
         android:background="@drawable/message_chat_bubble_others"
-        android:paddingVertical="12dp"
-        android:paddingHorizontal="16dp"
         android:elevation="2dp"
-        android:textSize="18dp"
-        android:text="Message"
-        />
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/theirChat_likeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/theirChat_messageTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/colorPrimaryDark" />
 
     <ImageButton
-        android:id="@+id/fragment_message_items_theirchat_deleteMessage"
+        android:id="@+id/theirChat_likeImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_below="@+id/fragment_message_items_theirchat_userName"
-        android:layout_toRightOf="@id/fragment_message_items_theirchat_userMessage"
-        app:srcCompat="@drawable/ic_delete" />
+        android:layout_below="@+id/theirChat_messageTextView"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/theirChat_likeCountTextView"
+        android:background="@null"
+        android:contentDescription="@string/like"
+        app:srcCompat="@drawable/ic_thumb_up_light_blue" />
+
+    <TextView
+        android:id="@+id/theirChat_timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/theirChat_messageTextView"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toEndOf="@+id/theirChat_likeImageButton" />
+
 </RelativeLayout>
