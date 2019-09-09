@@ -10,16 +10,15 @@ public class User implements Serializable {
     private String emailId;
     private String city;
     private String gender;
+    private boolean online;
 
-    private Boolean isOnline;
-
-    public User(String firstName, String lastName, String emailId, String city, String gender, Boolean isOnLine) {
+    public User(String firstName, String lastName, String emailId, String city, String gender, boolean online) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.city = city;
         this.gender = gender;
-        this.isOnline = isOnLine;
+        this.online = online;
     }
 
     public User(){
@@ -40,14 +39,6 @@ public class User implements Serializable {
 
     public void setUserProfileImageUrl(String userProfileImageUrl) {
         this.userProfileImageUrl = userProfileImageUrl;
-    }
-
-    public Boolean getOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(Boolean online) {
-        isOnline = online;
     }
 
     public String getFirstName() {
@@ -90,13 +81,14 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public Boolean getIsOnline(){
-        return isOnline;
+    public boolean isOnline() {
+        return online;
     }
 
-    public void setIsOnline(Boolean isOnLine){
-        this.isOnline = isOnLine;
+    public void setOnline(boolean online) {
+        this.online = online;
     }
+
     @Override
     public String toString() {
         return "User{" +

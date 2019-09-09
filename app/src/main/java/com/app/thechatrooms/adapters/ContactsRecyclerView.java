@@ -49,7 +49,7 @@ public class ContactsRecyclerView extends RecyclerView.Adapter<ContactsRecyclerV
                 .load(user.getUserProfileImageUrl())
                 .transform(new CircleTransform()).centerCrop().fit()
                 .into(holder.profileImage);
-        if (!user.getIsOnline())
+        if (!user.isOnline())
             holder.isOnline.setVisibility(View.GONE);
         else
             holder.isOnline.setVisibility(View.VISIBLE);

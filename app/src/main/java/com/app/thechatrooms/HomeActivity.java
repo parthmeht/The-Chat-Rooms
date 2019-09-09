@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         userId = preferences.getString(Parameters.USER_ID, "");
         myRef = database.getReference("chatRooms/userProfiles/");
-        myRef.child(userId).child("isOnline").setValue(true);
+        myRef.child(userId).child("online").setValue(true);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
         Log.d("Finale", "hey");
         myRef = database.getReference("chatRooms/userProfiles/");
-        myRef.child(userId).child("isOnline").setValue(false);
+        myRef.child(userId).child("online").setValue(false);
 
     }
 
@@ -264,7 +264,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected String doInBackground(String... strings) {
             myRef = database.getReference("chatRooms/userProfiles/");
-            myRef.child(userId).child("isOnline").setValue(true);
+            myRef.child(userId).child("online").setValue(true);
             return null;
 
         }
