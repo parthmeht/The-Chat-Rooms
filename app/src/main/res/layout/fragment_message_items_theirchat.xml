@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="10dp"
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="4dp"
-        android:text="Rose"/>
+        android:text="sender"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,4 +39,15 @@
         android:textSize="18dp"
         android:text="Message"
         />
+
+    <ImageButton
+        android:id="@+id/fragment_message_items_theirchat_deleteMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/fragment_message_items_theirchat_userName"
+        android:layout_toRightOf="@id/fragment_message_items_theirchat_userMessage"
+        app:srcCompat="@drawable/ic_delete" />
 </RelativeLayout>

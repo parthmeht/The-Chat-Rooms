@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,11 +26,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     FirebaseDatabase dbRef;
     ArrayList<Messages> messagesArrayList;
     String userId;
+    MessageInterface messageInterface;
 
-    public MessageAdapter(String userId, ArrayList<Messages> messagesArrayList, Activity a, Context context){
+    public MessageAdapter(String userId, ArrayList<Messages> messagesArrayList, Activity a, Context context, MessageInterface messageInterface){
         this.messagesArrayList = messagesArrayList;
         this.userId = userId;
         this.context = context;
+        this.messageInterface = messageInterface;
     }
 
     @NonNull
@@ -54,6 +57,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         final Messages messages = messagesArrayList.get(position);
         holder.message.setText(messages.getMessage());
         holder.sentBy.setText(messages.getCreatedBy());
+        if(!userId.equals(messages.getCreatedBy())){
+            holder.deleteButton.setVisibility(View.GONE);
+            holder.deleteButton.setClickable(false);
+        }
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                messageInterface.deleteMessage(messages.getMessageId());
+            }
+        });
     }
 
     @Override
@@ -82,18 +95,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView message ;
         TextView sentBy;
-//        ImageView userImage;
+        ImageButton deleteButton;
+
         public ViewHolder(View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.fragment_message_items_theirchat_userMessage);
             sentBy = itemView.findViewById(R.id.fragment_message_items_theirchat_userName);
-//            userImage = itemView.findViewById(R.id.fragment_message_items_theirchat_userImage);
+            deleteButton = itemView.findViewById(R.id.fragment_message_items_theirchat_deleteMessage);
+
 
         }
 
 //        public abstract void bindType(ChooseItem item) {
 //
 //        }
+    }
+    public interface MessageInterface{
+        void deleteMessage(String messageId);
     }
 
 

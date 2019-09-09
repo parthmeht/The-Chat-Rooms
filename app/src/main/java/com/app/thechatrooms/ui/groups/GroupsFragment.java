@@ -22,7 +22,9 @@ import com.app.thechatrooms.adapters.*;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
+import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.ui.chats.ChatsFragment;
+import com.app.thechatrooms.utilities.Parameters;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +43,7 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
     private GroupsViewModel groupsViewModel;
     private StorageReference mStorageRef;
     private String userId;
+    private User user;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
@@ -55,7 +58,10 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
+        user = (User) getArguments().getSerializable(Parameters.USER_ID);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Parameters.USER_ID, user);
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -124,6 +130,7 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
     public void joinGroup(GroupChatRoom groupChatRoom) {
         myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(1);
         Fragment fragment = new ChatsFragment();
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment);

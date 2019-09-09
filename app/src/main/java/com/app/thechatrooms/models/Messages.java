@@ -7,6 +7,16 @@ public class Messages {
     private String message;
     private ArrayList<Boolean> likesUserId = new ArrayList<>();
     private String createdBy;
+
+    public String getCreatedByName() {
+        return createdByName;
+    }
+
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
+    }
+
+    private String createdByName;
     private String createdOn;
     private String groupId;
 

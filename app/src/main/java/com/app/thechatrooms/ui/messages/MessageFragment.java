@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import android.widget.ImageButton;
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.adapters.MessageAdapter;
 import com.app.thechatrooms.models.Messages;
+import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.utilities.Parameters;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,9 +35,11 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessageFragment extends Fragment {
+public class MessageFragment extends Fragment implements MessageAdapter.MessageInterface {
 
+    private static final String TAG = "MessageFragment";
     private MessageAdapter messageAdapter;
+    private User user;
     private DatabaseReference myRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<Messages> messagesArrayList = new ArrayList<>();
@@ -53,10 +58,14 @@ public class MessageFragment extends Fragment {
         EditText editText = view.findViewById(R.id.fragment_chats_message_EditText);
         ImageButton sendButton = view.findViewById(R.id.fragment_chats_send_button);
         mAuth = FirebaseAuth.getInstance();
+        String s = getArguments().getString("GroupID");
+        Log.d("SSS",s);
+
         String userId = mAuth.getCurrentUser().getUid();
+        String userName = mAuth.getCurrentUser().getDisplayName();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("chatRooms/messages");
+        myRef = firebaseDatabase.getReference("chatRooms/messages/"+s);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -67,7 +76,7 @@ public class MessageFragment extends Fragment {
                         messagesArrayList.add(messages);
                         RecyclerView recyclerView = view.findViewById(R.id.fragment_chats_recyclerView);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        messageAdapter = new MessageAdapter(userId, messagesArrayList, getActivity(), getContext());
+                        messageAdapter = new MessageAdapter(userId, messagesArrayList, getActivity(), getContext(), MessageFragment.this);
                         recyclerView.setAdapter(messageAdapter);
                         messageAdapter.notifyDataSetChanged();
                     }
@@ -91,6 +100,7 @@ public class MessageFragment extends Fragment {
                     messages.setGroupId(groupdId);
                     messages.setMessage(editText.getText().toString());
                     messages.setCreatedBy(userId);
+                    messages.setCreatedByName(userName);
                     myRef.child(messageId).setValue(messages);
                     editText.setText("");
                     hideKeyboard(getContext(), view);
@@ -105,4 +115,8 @@ public class MessageFragment extends Fragment {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    public void deleteMessage(String messageId) {
+        myRef.child(messageId).setValue(null);
+    }
 }

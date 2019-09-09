@@ -22,6 +22,8 @@ import com.app.thechatrooms.adapters.ChatFragmentAdapter;
 import com.app.thechatrooms.adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.models.GroupChatRoom;
 import com.app.thechatrooms.models.OnlineUser;
+import com.app.thechatrooms.models.User;
+import com.app.thechatrooms.utilities.Parameters;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatFragmentInterface {
 
     private View view;
+    private User user;
     private ChatFragmentAdapter chatFragmentAdapter;
     private StorageReference mStorageRef;
     private DatabaseReference myRef;
@@ -52,6 +55,8 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
 
         mAuth = FirebaseAuth.getInstance();
         userId = mAuth.getCurrentUser().getUid();
+
+        user = (User) getArguments().getSerializable(Parameters.USER_ID);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
