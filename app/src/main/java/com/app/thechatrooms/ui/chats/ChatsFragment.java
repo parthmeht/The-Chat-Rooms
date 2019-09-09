@@ -74,25 +74,25 @@ public class ChatsFragment extends Fragment implements ChatFragmentAdapter.ChatF
                     group.setGroupName(child.child("groupName").getValue().toString());
                     ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
                     if(group.getCreatedById().equals(userId)){
-                        for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
-                            //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
-                                OnlineUser onlineUser = new OnlineUser();
-                                onlineUser.setUserId(child1.getKey());
-                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
-                                onlineUsersList.add(onlineUser);
-                                group.setMembersListWithOnlineStatus(onlineUsersList);
-                        }
+//                        for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
+//                            //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
+//                                OnlineUser onlineUser = new OnlineUser();
+//                                onlineUser.setUserId(child1.getKey());
+//                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
+//                                onlineUsersList.add(onlineUser);
+//                                group.setMembersListWithOnlineStatus(onlineUsersList);
+//                        }
                         groupList.add(group);
                     }else{
                         if(child.child("membersListWithOnlineStatus").hasChild(userId)){
-                            for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
-                                //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
-                                OnlineUser onlineUser = new OnlineUser();
-                                onlineUser.setUserId(child1.getKey());
-                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
-                                onlineUsersList.add(onlineUser);
-                                group.setMembersListWithOnlineStatus(onlineUsersList);
-                            }
+//                            for (DataSnapshot child1: child.child("membersListWithOnlineStatus").getChildren()){
+//                                //Log.d("Child", group.getCreatedByName()+" , ********* "+child1.getKey());
+//                                OnlineUser onlineUser = new OnlineUser();
+//                                onlineUser.setUserId(child1.getKey());
+//                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
+//                                onlineUsersList.add(onlineUser);
+//                                group.setMembersListWithOnlineStatus(onlineUsersList);
+//                            }
                             groupList.add(group);
                         }
                     }

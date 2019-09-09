@@ -19,8 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.app.thechatrooms.R;
+import com.app.thechatrooms.adapters.GroupOnlineMembersAdapter;
 import com.app.thechatrooms.adapters.MessageAdapter;
 import com.app.thechatrooms.models.Messages;
+import com.app.thechatrooms.models.GroupOnlineUsers;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.utilities.Parameters;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,11 +42,13 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
     private static final String TAG = "MessageFragment";
     private MessageAdapter messageAdapter;
     private User user;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, groupDbRef;
     private FirebaseDatabase firebaseDatabase;
     ArrayList<Messages> messagesArrayList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private String groupdId;
+    ArrayList<GroupOnlineUsers> onlineUserArrayList = new ArrayList<>();
+    GroupOnlineMembersAdapter groupOnlineMembersAdapter;
 
     public MessageFragment() {
         // Required empty public constructor
@@ -57,6 +61,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         EditText editText = view.findViewById(R.id.fragment_chats_message_EditText);
         ImageButton sendButton = view.findViewById(R.id.fragment_chats_send_button);
+
         mAuth = FirebaseAuth.getInstance();
         String s = getArguments().getString("GroupID");
         Log.d("SSS",s);
@@ -66,6 +71,33 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/messages/"+s);
+        groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+s+"/membersListWithOnlineStatus");
+        groupDbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                onlineUserArrayList.clear();
+                for (DataSnapshot val: dataSnapshot.getChildren()){
+
+                    String id = val.getKey();
+                    boolean online = (boolean) val.getValue();
+                    GroupOnlineUsers onlineUser = new GroupOnlineUsers(id, online);
+                    onlineUserArrayList.add(onlineUser);
+                    RecyclerView recyclerView = view.findViewById(R.id.fragment_message_active_users);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    groupOnlineMembersAdapter = new GroupOnlineMembersAdapter(onlineUserArrayList,getActivity(), getContext());
+                    recyclerView.setAdapter(groupOnlineMembersAdapter);
+                    groupOnlineMembersAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
