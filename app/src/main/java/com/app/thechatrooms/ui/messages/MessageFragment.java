@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,7 +39,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -48,7 +48,6 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
 
     private static final String TAG = "MessageFragment";
     ArrayList<Messages> messagesArrayList = new ArrayList<>();
-    GroupOnlineMembersAdapter groupOnlineMembersAdapter;
     private MessageAdapter messageAdapter;
     private User user;
     private DatabaseReference myRef, groupDbRef;
@@ -144,8 +143,8 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
                 return false;
             case R.id.action_showMembers:
                 Log.i("item id ", item.getItemId() + "");
-                final FragmentManager manager = getFragmentManager();
-                final ShowMembersFragment fragment = new ShowMembersFragment();
+                FragmentManager manager = getFragmentManager();
+                DialogFragment fragment = new ShowMembersFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Parameters.SHOW_MEMBERS,hashMap);
                 fragment.setArguments(bundle);
@@ -156,4 +155,15 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        groupDbRef.child(user.getId()).child("online").setValue(true);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        groupDbRef.child(user.getId()).child("online").setValue(false);
+    }
 }

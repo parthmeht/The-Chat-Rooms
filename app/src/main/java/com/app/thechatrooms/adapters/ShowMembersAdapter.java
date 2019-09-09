@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class ShowMembersAdapter extends RecyclerView.Adapter<ShowMembersViewHolder> {
+public class ShowMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
     LinkedHashMap<String,GroupOnlineUsers> hashMap;
@@ -38,18 +38,19 @@ public class ShowMembersAdapter extends RecyclerView.Adapter<ShowMembersViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShowMembersViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ShowMembersViewHolder viewHolder = (ShowMembersViewHolder) holder;
         GroupOnlineUsers value = (new ArrayList<>(hashMap.values())).get(position);
         Log.v(TAG,value.toString());
-        holder.getDisplayNameTextView().setText(value.getDisplayName());
+        viewHolder.getDisplayNameTextView().setText(value.getDisplayName());
         Picasso.get()
                 .load(value.getProfileLink())
                 .transform(new CircleTransform()).centerCrop().fit()
-                .into(holder.getUserProfileImageView());
+                .into(viewHolder.getUserProfileImageView());
         if (value.isOnline())
-            holder.getOnlineIconImageView().setVisibility(View.VISIBLE);
+            viewHolder.getOnlineIconImageView().setVisibility(View.VISIBLE);
         else
-            holder.getOnlineIconImageView().setVisibility(View.INVISIBLE);
+            viewHolder.getOnlineIconImageView().setVisibility(View.INVISIBLE);
     }
 
     @Override
