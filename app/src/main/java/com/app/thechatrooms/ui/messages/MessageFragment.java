@@ -4,7 +4,11 @@ package com.app.thechatrooms.ui.messages;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -13,6 +17,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +48,6 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
 
     private static final String TAG = "MessageFragment";
     ArrayList<Messages> messagesArrayList = new ArrayList<>();
-    ArrayList<GroupOnlineUsers> onlineUserArrayList = new ArrayList<>();
     GroupOnlineMembersAdapter groupOnlineMembersAdapter;
     private MessageAdapter messageAdapter;
     private User user;
@@ -49,7 +55,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth mAuth;
     private String groupId;
-
+    private LinkedHashMap<String, GroupOnlineUsers> hashMap = new LinkedHashMap<>();
     public MessageFragment() {
         // Required empty public constructor
     }
@@ -65,25 +71,18 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
         mAuth = FirebaseAuth.getInstance();
         groupId = getArguments().getString("GroupID");
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
+        setHasOptionsMenu(true);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/messages/" + groupId);
-        /*groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
+        groupDbRef = firebaseDatabase.getReference("chatRooms/groupChatRoom/"+groupId+"/membersListWithOnlineStatus");
         groupDbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                onlineUserArrayList.clear();
+                hashMap.clear();
                 for (DataSnapshot val: dataSnapshot.getChildren()){
-                    String id = val.getKey();
-                    boolean online = (boolean) val.getValue();
-                    GroupOnlineUsers onlineUser = new GroupOnlineUsers(id, online);
-                    onlineUserArrayList.add(onlineUser);
-                    RecyclerView recyclerView = view.findViewById(R.id.fragment_message_active_users);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    groupOnlineMembersAdapter = new GroupOnlineMembersAdapter(onlineUserArrayList,getActivity(), getContext());
-                    recyclerView.setAdapter(groupOnlineMembersAdapter);
-                    groupOnlineMembersAdapter.notifyDataSetChanged();
+                    GroupOnlineUsers onlineUser = val.getValue(GroupOnlineUsers.class);
+                    hashMap.put(val.getKey(),onlineUser);
                 }
             }
 
@@ -91,7 +90,7 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -130,6 +129,31 @@ public class MessageFragment extends Fragment implements MessageAdapter.MessageI
     public void hideKeyboard(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.message, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_createGroup:
+                return false;
+            case R.id.action_showMembers:
+                Log.i("item id ", item.getItemId() + "");
+                final FragmentManager manager = getFragmentManager();
+                final ShowMembersFragment fragment = new ShowMembersFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Parameters.SHOW_MEMBERS,hashMap);
+                fragment.setArguments(bundle);
+                fragment.show(manager,"show_members");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

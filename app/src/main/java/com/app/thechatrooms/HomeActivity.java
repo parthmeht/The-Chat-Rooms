@@ -207,12 +207,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_createGroup:
@@ -258,7 +260,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.show();
                 return true;
         }
-        return true;
+        return false;
 
     }
 
@@ -274,26 +276,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             contactsFragment.setOnContactsSelectedListener(this);
         }
     }
-
-    private class ChangeOnlineStatus extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            myRef = database.getReference("chatRooms/userProfiles/");
-            myRef.child(userId).child("online").setValue(true);
-            return null;
-
-        }
-    }
-
-//    public static class FragTransaction{
-//        public FragTransaction(Fragment fragment) {
-//
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
-//            fragmentTransaction.commit();
-//        }
-//
-//    }
-
 
 }

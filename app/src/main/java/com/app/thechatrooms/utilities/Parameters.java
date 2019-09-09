@@ -10,4 +10,5 @@ public final class Parameters {
     public static final String UPLOAD_A_PROFILE_IMAGE = "Upload a profile Image";
     public static final String UPLOAD_IMAGE_LESS_THAN_5MB = "Uploaded image should be less than 5 MB";
     public static final String UNABLE_TO_UPLOAD_IMAGE = "Unable to upload profile image! Try with a smaller image";
+    public static final String SHOW_MEMBERS = "Show_Members";
 }

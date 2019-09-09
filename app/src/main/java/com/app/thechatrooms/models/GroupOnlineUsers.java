@@ -46,4 +46,14 @@ public class GroupOnlineUsers {
     public void setOnline(boolean online) {
         this.online = online;
     }
+
+    @Override
+    public String toString() {
+        return "GroupOnlineUsers{" +
+                "userId='" + userId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", profileLink='" + profileLink + '\'' +
+                ", online=" + online +
+                '}';
+    }
 }
