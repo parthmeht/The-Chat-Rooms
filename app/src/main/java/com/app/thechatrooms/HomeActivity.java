@@ -27,6 +27,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.GroupOnlineUsers;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.app.thechatrooms.ui.contacts.ContactsFragment;
@@ -237,8 +238,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             groupChatRoom.setCreatedById(user.getId());
                             groupChatRoom.setCreatedOn(createdOn);
                             groupChatDbRef.child(grpId).setValue(groupChatRoom);
-                            //groupChatDbRef.child(grpId).child("createdBy").child(user.getId()).setValue(user.getFirstName()+" "+user.getLastName());
-                            groupChatDbRef.child(grpId).child("membersListWithOnlineStatus").child(user.getId()).setValue(1);
+                            GroupOnlineUsers groupOnlineUsers = new GroupOnlineUsers(user.getId(),
+                                    user.getFirstName()+ " "+ user.getLastName(),user.getUserProfileImageUrl(),false);
+                            groupChatDbRef.child(grpId).child("membersListWithOnlineStatus").child(user.getId()).setValue(groupOnlineUsers);
                             Toast.makeText(HomeActivity.this, "Group Created", Toast.LENGTH_LONG).show();
 
                             Bundle bundle = new Bundle();

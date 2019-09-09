@@ -46,7 +46,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final GroupChatRoom group = groupList.get(position);
-        if (group.getCreatedById().equals(user)) {
+        if (group.getCreatedById().equals(user.getId())) {
             holder.deleteButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setClickable(true);
         } else {
@@ -55,7 +55,7 @@ public class ChatFragmentAdapter extends RecyclerView.Adapter<ChatFragmentAdapte
         }
         holder.joinButton.setVisibility(View.GONE);
         holder.joinButton.setClickable(false);
-        if (!group.getCreatedById().equals(user)) {
+        if (!group.getCreatedById().equals(user.getId())) {
             holder.leaveButton.setVisibility(View.VISIBLE);
             holder.leaveButton.setClickable(true);
         } else {

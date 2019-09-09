@@ -1,11 +1,12 @@
 package com.app.thechatrooms.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupChatRoom {
     private String groupId;
     private String groupName;
-    private ArrayList<OnlineUser> membersListWithOnlineStatus = new ArrayList<>();
+    private HashMap<String,GroupOnlineUsers> membersListWithOnlineStatus = new HashMap<>();
     private String createdByName;
     private String createdOn;
     private String createdById;
@@ -26,12 +27,12 @@ public class GroupChatRoom {
         this.groupName = groupName;
     }
 
-    public ArrayList<OnlineUser> getMembersListWithOnlineStatus() {
+    public HashMap<String, GroupOnlineUsers> getMembersListWithOnlineStatus() {
         return membersListWithOnlineStatus;
     }
 
-    public void setMembersListWithOnlineStatus(ArrayList<OnlineUser> membersList) {
-        this.membersListWithOnlineStatus = membersList;
+    public void setMembersListWithOnlineStatus(HashMap<String, GroupOnlineUsers> membersListWithOnlineStatus) {
+        this.membersListWithOnlineStatus = membersListWithOnlineStatus;
     }
 
     public String getCreatedByName() {

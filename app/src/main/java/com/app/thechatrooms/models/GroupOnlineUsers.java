@@ -1,12 +1,18 @@
 package com.app.thechatrooms.models;
 
 public class GroupOnlineUsers {
-    private String userId;
-    private boolean userOnlineStatus; //1 - online, 0 - offline
+    private String userId, displayName, profileLink;
+    private boolean online; //1 - online, 0 - offline
 
-    public GroupOnlineUsers(String userId, boolean userOnlineStatus) {
+    public GroupOnlineUsers(String userId, String displayName, String profileLink, boolean online) {
         this.userId = userId;
-        this.userOnlineStatus = userOnlineStatus;
+        this.displayName = displayName;
+        this.profileLink = profileLink;
+        this.online = online;
+    }
+
+    public GroupOnlineUsers() {
+
     }
 
     public String getUserId() {
@@ -17,12 +23,27 @@ public class GroupOnlineUsers {
         this.userId = userId;
     }
 
-    public boolean isUserOnlineStatus() {
-        return userOnlineStatus;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setUserOnlineStatus(boolean userOnlineStatus) {
-        this.userOnlineStatus = userOnlineStatus;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
+    public String getProfileLink() {
+        return profileLink;
+    }
+
+    public void setProfileLink(String profileLink) {
+        this.profileLink = profileLink;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 }

@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.models.GroupChatRoom;
+import com.app.thechatrooms.models.GroupOnlineUsers;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdapter.ViewHolder> {
     Context context;
@@ -48,12 +50,16 @@ public class GroupFragmentAdapter extends RecyclerView.Adapter<GroupFragmentAdap
         final GroupChatRoom group = groupList.get(position);
         holder.deleteButton.setVisibility(View.GONE);
         holder.deleteButton.setClickable(false);
-        holder.joinButton.setVisibility(View.VISIBLE);
-        holder.joinButton.setClickable(true);
+        HashMap<String, GroupOnlineUsers> hm = group.getMembersListWithOnlineStatus();
+        if (hm.containsKey(userId))
+            holder.joinButton.setVisibility(View.INVISIBLE);
+        else{
+            holder.joinButton.setVisibility(View.VISIBLE);
+            holder.joinButton.setClickable(true);
+        }
         holder.groupName.setText(group.getGroupName());
         holder.createdBy.setText(group.getCreatedByName());
         holder.joinButton.setOnClickListener(view -> groupFragmentInterface.joinGroup(group));
-
     }
 
     @Override

@@ -10,14 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.thechatrooms.R;
 import com.app.thechatrooms.adapters.GroupFragmentAdapter;
 import com.app.thechatrooms.models.GroupChatRoom;
-import com.app.thechatrooms.models.OnlineUser;
+import com.app.thechatrooms.models.GroupOnlineUsers;
 import com.app.thechatrooms.models.User;
 import com.app.thechatrooms.ui.chats.ChatsFragment;
 import com.app.thechatrooms.utilities.Parameters;
@@ -28,18 +27,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupsFragment extends Fragment implements GroupFragmentAdapter.GroupFragmentInterface {
 
     ArrayList<GroupChatRoom> groupList = new ArrayList<>();
     View root;
     private GroupFragmentAdapter groupFragmentAdapter;
-    private GroupsViewModel groupsViewModel;
-    private StorageReference mStorageRef;
+
     private String userId;
     private User user;
     private DatabaseReference myRef;
@@ -48,8 +45,6 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        groupsViewModel =
-                ViewModelProviders.of(this).get(GroupsViewModel.class);
         root = inflater.inflate(R.layout.fragment_groups, container, false);
 
         mAuth = FirebaseAuth.getInstance();
@@ -60,7 +55,6 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
         bundle.putSerializable(Parameters.USER_ID, user);
         firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("chatRooms/groupChatRoom");
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -73,19 +67,17 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
                     group.setCreatedOn(child.child("createdOn").getValue().toString());
                     group.setGroupId(child.child("groupId").getValue().toString());
                     group.setGroupName(child.child("groupName").getValue().toString());
-                    ArrayList<OnlineUser> onlineUsersList = new ArrayList<>();
-                    if (!group.getCreatedById().equals(userId)) {
-                        if (!child.child("membersListWithOnlineStatus").hasChild(userId)) {
+                    HashMap<String,GroupOnlineUsers> onlineUsersList = new HashMap<>();
+                    //if (!group.getCreatedById().equals(userId)) {
+                        //if (!child.child("membersListWithOnlineStatus").hasChild(userId)) {
                             for (DataSnapshot child1 : child.child("membersListWithOnlineStatus").getChildren()) {
-                                OnlineUser onlineUser = new OnlineUser();
-                                onlineUser.setUserId(child1.getKey());
-                                onlineUser.setUserOnlineStatus(Integer.parseInt(child1.getValue().toString()));
-                                onlineUsersList.add(onlineUser);
+                                GroupOnlineUsers onlineUser = child1.getValue(GroupOnlineUsers.class);
+                                onlineUsersList.put(child1.getKey(),onlineUser);
                                 group.setMembersListWithOnlineStatus(onlineUsersList);
                             }
                             groupList.add(group);
-                        }
-                    }
+                        //}
+                    //}
                 }
                 RecyclerView recyclerView = root.findViewById(R.id.fragment_groups_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,7 +98,9 @@ public class GroupsFragment extends Fragment implements GroupFragmentAdapter.Gro
 
     @Override
     public void joinGroup(GroupChatRoom groupChatRoom) {
-        myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(1);
+        GroupOnlineUsers groupOnlineUsers = new GroupOnlineUsers(user.getId(),
+                user.getFirstName()+ " "+ user.getLastName(),user.getUserProfileImageUrl(),false);
+        myRef.child(groupChatRoom.getGroupId()).child("membersListWithOnlineStatus").child(userId).setValue(groupOnlineUsers);
         Bundle bundleGroup = new Bundle();
         bundleGroup.putSerializable(Parameters.USER_ID, user);
         ChatsFragment fragment = new ChatsFragment();
